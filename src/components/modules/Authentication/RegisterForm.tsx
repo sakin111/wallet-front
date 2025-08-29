@@ -16,8 +16,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 
 import { toast } from "sonner";
-import { useRegisterMutation } from "@/redux/features/auth/auth.api";
+import { useLoginMutation, useRegisterMutation } from "@/redux/features/auth/auth.api";
 import Password from "@/components/ui/Password";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 
 
 const registerSchema = z
@@ -29,10 +31,11 @@ const registerSchema = z
       })
       .max(50),
     email: z.email(),
-    password: z.string().min(8, { error: "Password is too short" }),
+    password: z.string().min(6, { error: "Password is too short" }),
     confirmPassword: z
       .string()
-      .min(8, { error: "Confirm Password is too short" }),
+      .min(6, { error: "Confirm Password is too short" }),
+      role:z.string()
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password do not match",
@@ -45,6 +48,7 @@ export function RegisterForm({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [register] = useRegisterMutation();
   const navigate = useNavigate();
+const [login] = useLoginMutation();
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -53,6 +57,7 @@ export function RegisterForm({
       email: "",
       password: "",
       confirmPassword: "",
+      role: ""
     },
   });
 
@@ -61,13 +66,20 @@ export function RegisterForm({
       name: data.name,
       email: data.email,
       password: data.password,
+      role:data.role
     };
 
     try {
       const result = await register(userInfo).unwrap();
       console.log(result);
       toast.success("User created successfully");
-      navigate("/verify");
+      const loginResult = await login({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+
+      console.log("Logged in user:", loginResult);
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
@@ -122,7 +134,7 @@ export function RegisterForm({
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Password {...field }/>
+                    <Password {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -141,6 +153,30 @@ export function RegisterForm({
                 </FormItem>
               )}
             />
+          
+          <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Role</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a Role" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="USER">User</SelectItem>
+                  <SelectItem value="AGENT">Agent</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+
             <Button type="submit" className="w-full">
               Submit
             </Button>

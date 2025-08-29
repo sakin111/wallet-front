@@ -1,34 +1,40 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Menu, X, LogIn } from 'lucide-react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { ModeToggle } from './ModeToggler';
 import Logo from '@/assets/icons/Logo';
+import { useDispatch } from 'react-redux';
+import { authApi, useLogoutMutation, useUserInfoQuery } from '@/redux/features/auth/auth.api';
+import { role } from '@/constant/role';
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../ui/navigation-menu';
 
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  // const dispatch = useDispatch();
+  const [logout] = useLogoutMutation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { data } = useUserInfoQuery(undefined)
 
-  // const handleLogout = () => {
-  //   dispatch(logout());
-  //   navigate('/');
-  // };
-
-
-
+  const handleLogout = async () => {
+    await logout(undefined);
+    dispatch(authApi.util.resetApiState());
+  };
 
 
   const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Features', href: '/features' },
-    { name: 'About', href: '/about' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'FAQ', href: '/faq' },
+    { name: 'Home', href: '/' , role: "PUBLIC"},
+    { name: 'Features', href: '/features' , role: "PUBLIC"},
+    { name: 'About', href: '/about' , role: "PUBLIC"},
+    { name: 'Contact', href: '/contact', role: "PUBLIC" },
+    { name: 'FAQ', href: '/faq', role: "PUBLIC"},
+    { name: 'Dashboard', href: '/admin', role: role.admin},
+    { name: 'Dashboard', href: '/agent', role: role.agent},
+    { name: 'Dashboard', href: '/user ', role: role.user },
   ];
 
   return (
@@ -41,15 +47,35 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
-              {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                >
-                  {item.name}
-                </a>
-              ))}
+             {/* Navigation menu */}
+            <NavigationMenu className="max-md:hidden">
+              <NavigationMenuList className="gap-2">
+                {navItems.map((link, index) => (
+                  <React.Fragment key={index}>
+                    {link.role === "PUBLIC" && (
+                      <NavigationMenuItem>
+                        <NavigationMenuLink
+                          asChild
+                          className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                        >
+                          <Link to={link.href}>{link.name}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+                    {link.role === data?.data?.role && (
+                      <NavigationMenuItem>
+                        <NavigationMenuLink
+                          asChild
+                          className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                        >
+                          <Link to={link.href}>{link.name}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+                  </React.Fragment>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
             </div>
           </div>
 
@@ -78,13 +104,30 @@ export default function Navbar() {
               </Button>
             )} */}
             <ModeToggle />
-            <Button
-              onClick={() => navigate('/login')}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
-            >
-              <LogIn className="h-4 w-4 mr-2" />
-              Login
-            </Button>
+
+
+
+
+            {data?.data?.email && (
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                className="text-sm"
+              >
+                Logout
+              </Button>
+            )}
+            {!data?.data?.email && (
+              <Button
+                onClick={() => navigate('/login')}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+              >
+                <LogIn className="h-4 w-4 mr-2" />
+                Login
+              </Button>
+            )}
+
+
             {/* Mobile menu button */}
             <div className="md:hidden">
               <Button
@@ -118,6 +161,10 @@ export default function Navbar() {
                 {item.name}
               </a>
             ))}
+
+
+
+
             {/* {isAuthenticated && (
               <Button
                 onClick={() => {
