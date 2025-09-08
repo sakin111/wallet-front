@@ -9,13 +9,15 @@ import Register from "@/pages/Register";
 import Unauthorized from "@/pages/UnAuthorized";
 import { createBrowserRouter, Navigate } from "react-router";
 import { adminSidebarItems } from "./adminSideBar";
-import { withAuth } from "@/utils/withAuth";
+
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import type { TRole } from "@/Types";
 import { role } from "@/constant/role";
 import { generateRoutes } from "@/utils/generateRoutes";
 import { agentSidebar } from "./agentSideBar";
 import { userSidebar } from "./userSideBar";
+import { withAuth } from "@/utils/withAuth";
+
 
 
 export const router = createBrowserRouter([
@@ -61,7 +63,7 @@ export const router = createBrowserRouter([
   Component: withAuth(DashboardLayout, role.agent as TRole),
   path: "/agent",
   children:[
-  {index: true, element:<Navigate to="/agent/agentCommission" />},
+  {index: true, element:<Navigate to="/agent/stats" />},
   ...generateRoutes(agentSidebar),
   ]
 },
@@ -69,7 +71,7 @@ export const router = createBrowserRouter([
   Component: withAuth(DashboardLayout, role.user as TRole),
   path: "/user",
   children:[
-  {index: true, element:<Navigate to="/user/guidedTour"/>},
+  {index: true, element:<Navigate to="/user/myStats"/>},
   ...generateRoutes(userSidebar),
   ]
 },

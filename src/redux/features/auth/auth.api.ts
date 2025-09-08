@@ -1,4 +1,6 @@
 import { baseApi } from "@/redux/baseApi";
+import type {UserProfile } from "@/Types";
+
 
 
 
@@ -35,12 +37,43 @@ export const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["USER"],
     }),
+
+ updateUserProfile: builder.mutation<
+      { data: UserProfile }, 
+      { id: string; body: Partial<UserProfile> } 
+    >({
+      query: ({ id, body }) => ({
+        url: `/user/${id}`,
+        method: "PATCH",
+        data: body
+      }),
+      invalidatesTags: ["USER"],
+    }),
+
+
+
+     resetPassword: builder.mutation<
+      { message: string },
+      { oldPassword: string; newPassword: string }
+    >({
+      query: ({ oldPassword, newPassword }) => ({
+        url: "/auth/reset-password",
+        method: "PATCH",
+        data: { oldPassword, newPassword },
+      }),
+    }),
+
+
   }),
 });
+
+
 
 export const {
   useRegisterMutation,
   useLoginMutation,
   useUserInfoQuery,
   useLogoutMutation,
+  useUpdateUserProfileMutation,
+  useResetPasswordMutation
 } = authApi;

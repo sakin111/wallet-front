@@ -24,7 +24,7 @@ export interface ISidebarItem {
   }[];
 }
 
-export type TRole = "SUPER_ADMIN" | "ADMIN" | "USER";
+export type TRole =  "ADMIN" | "AGENT" | "USER" ;
 
 type ZodIssue = {
   code: string;
@@ -48,4 +48,22 @@ export interface IErrorResponse {
     name: string;
   };
   stack?: string;
+}
+
+
+export interface UserProfile {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  isVerified?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ProfileResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+  data: UserProfile;
 }

@@ -1,26 +1,44 @@
-import HomePage from "@/pages/HomePage";
-import GuidedTour from "@/pages/User/GuidedTour";
-import MyTransaction from "@/pages/User/MyTransaction";
+import Deposit from "@/pages/User/Deposit";
+import MyStats from "@/pages/User/MyStats";
+import { Profile } from "@/pages/User/Profile";
+
+
+
+import SendMoney from "@/pages/User/SendMoney";
+import Withdraw from "@/pages/User/Withdraw";
 import type { ISidebarItem } from "@/Types";
 
-
 export const userSidebar: ISidebarItem[] = [
-    {
-      title: "General",
-      items: [
-        {
-          title: "Home",
-          url: "/",         
-          component: HomePage, 
-          global: true,      
-        },
-      ],
-    },
   {
-    title: "user",
+    title: "Dashboard",
     items: [
-      { title: "guided tour", url: "guidedTour", component: GuidedTour },
-      { title: "My transaction", url: "transaction", component: MyTransaction },
+      {
+        title: "MyStats",
+        url: "/user/myStats",
+        component: MyStats ,
+      },
+      {
+        title: "deposit",
+        url: "/user/deposit",
+        component: Deposit,
+      },
+      {
+        title: "withdraw",
+        url: "/user/withdraw",
+        component: Withdraw,
+      },
+      {
+        title: "sendMoney",
+        url: "/user/sendMoney",
+        component: SendMoney,
+      },
+      {
+        title: "profile",
+        url: "/user/profile",
+        component: Profile,
+      },
+ 
     ],
   },
 ];
+

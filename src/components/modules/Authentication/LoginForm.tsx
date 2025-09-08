@@ -49,11 +49,7 @@ export function LoginForm({
       if (err?.data?.message === "Password does not match") {
         toast.error("Invalid credentials")
       }
-
-      if (err?.data?.message === "User is not verified") {
-        toast.error("Your account is not verified")
-        navigate("/verify", { state: data.email })
-      }
+      else toast.error(err?.data?.message || "Login failed")
     }
   }
 

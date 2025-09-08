@@ -1,26 +1,24 @@
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import type { TRole } from "@/Types";
-import type { ComponentType } from "react";
 import { Navigate } from "react-router";
 
-export const withAuth = (Component: ComponentType, requiredRole?: TRole) => {
-
-  return function AuthWrapper() {
+export const withAuth = <T extends object>(Component: React.ComponentType, expectedRole: TRole) => {
+  return (props: T) => {
     const { data, isLoading } = useUserInfoQuery(undefined);
 
-    if (isLoading) {
-      return <div>Loading...</div>
+    if (isLoading) return <p>Loading...</p>;
+
+    const user = data?.data; 
+
+
+    if (!user) {
+      return <Navigate to="/login" />;
     }
 
-    if (!data?.data?.email) {
-      return <Navigate to="/login" replace />;
+    if (!user.role || user.role.toLowerCase() !== expectedRole.toLowerCase()) {
+      return <Navigate to="/unauthorized" />;
     }
 
-    // Logged in but role doesn’t match → redirect
-    if (requiredRole && requiredRole !== data?.data?.role) {
-      return <Navigate to="/unAuthorized" replace />;
-    }
-
-    return <Component />;
+    return <Component {...props} />;
   };
 };

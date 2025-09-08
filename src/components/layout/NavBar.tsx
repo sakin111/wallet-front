@@ -20,6 +20,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { data } = useUserInfoQuery(undefined)
 
+
   const handleLogout = async () => {
     await logout(undefined);
     dispatch(authApi.util.resetApiState());
@@ -34,7 +35,7 @@ export default function Navbar() {
     { name: 'FAQ', href: '/faq', role: "PUBLIC"},
     { name: 'Dashboard', href: '/admin', role: role.admin},
     { name: 'Dashboard', href: '/agent', role: role.agent},
-    { name: 'Dashboard', href: '/user ', role: role.user },
+    { name: 'Dashboard', href: '/user', role: role.user },
   ];
 
   return (

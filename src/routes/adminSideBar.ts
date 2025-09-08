@@ -2,7 +2,6 @@ import AllCommission from "@/pages/Admin/AllCommission";
 import AllTransaction from "@/pages/Admin/AllTransaction";
 import AllUsers from "@/pages/Admin/AllUsers";
 import Analytics from "@/pages/Admin/Analytics";
-import HomePage from "@/pages/HomePage";
 import type { ISidebarItem } from "@/Types";
 
 export const adminSidebarItems: ISidebarItem[] = [
@@ -16,27 +15,18 @@ export const adminSidebarItems: ISidebarItem[] = [
       },
     ],
   },
-    {
-        title: "General",
-        items: [
-            {
-                title: "Home",
-                url: "/",
-                component: HomePage,
-            },
-        ],
-    },
+
   {
     title: "Users",
     items: [
       {
         title: "All Users",
-        url: "all-users",
+        url: "allUsers",
         component: AllUsers,
       },
       {
         title: "All Transactions",
-        url: "all-transactions",
+        url: "allTransactions",
         component: AllTransaction,
       },
     ],
@@ -46,7 +36,7 @@ export const adminSidebarItems: ISidebarItem[] = [
     items: [
       {
         title: "All Commissions",
-        url: "all-commissions",
+        url: "allCommissions",
         component: AllCommission,
       },
     ],
