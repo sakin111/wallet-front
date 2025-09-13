@@ -1,3 +1,4 @@
+// Your Tour component from earlier
 import { useEffect, useState } from "react";
 import Joyride, { STATUS } from "react-joyride"; 
 import type { Step, CallBackProps} from "react-joyride"; 
@@ -16,10 +17,10 @@ export default function Tour({ steps, runTour = false, onFinish }: TourProps) {
   }, [runTour]);
 
   const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status  } = data;
+    const { status } = data;
     if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
       setRun(false);
-      onFinish?.(); // callback to parent
+      onFinish?.();
     }
   };
 
@@ -33,8 +34,8 @@ export default function Tour({ steps, runTour = false, onFinish }: TourProps) {
       callback={handleJoyrideCallback}
       styles={{
         options: {
-          primaryColor: "#2563eb", // Tailwind blue-600
-          backgroundColor: "#1f2937", // dark tooltip
+          primaryColor: "#2563eb", 
+          backgroundColor: "#1f2937", 
           textColor: "#f9fafb",
           arrowColor: "#1f2937",
           zIndex: 10000,

@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useWithdrawMutation } from "@/redux/features/transaction/transaction.api";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
+import { useNavigate } from "react-router";
 
 // --- Schema and Type ---
 const withdrawSchema = z.object({
@@ -32,6 +33,7 @@ type WithdrawForm = z.infer<typeof withdrawSchema>;
 
 // --- Component ---
 export default function Withdraw() {
+  const navigate = useNavigate()
   const [withdraw, { isLoading }] = useWithdrawMutation();
   const { data: userData, isLoading: userDataLoading } = useUserInfoQuery(undefined);
 
@@ -62,6 +64,7 @@ export default function Withdraw() {
       const result = await withdraw(payload).unwrap();
       console.log("Withdraw result:", result);
       toast.success("Money withdrawn successfully!");
+      navigate("/user/myStats")
       form.reset({ agentEmail: "", amount: 1 });
     } catch (err: any) {
       console.error("Withdraw error:", err);
@@ -96,7 +99,7 @@ export default function Withdraw() {
               )}
             />
 
-            {/* Amount Field - Fixed to handle NaN and empty input */}
+
             <FormField
               control={form.control}
               name="amount"
@@ -109,10 +112,8 @@ export default function Withdraw() {
                       placeholder="e.g., 500"
                       onChange={(e) => {
                         const value = parseFloat(e.target.value);
-                        // If the value is a number, update the field. If it's NaN, set it to null.
                         field.onChange(isNaN(value) ? null : value);
                       }}
-                      // Convert the field value to an empty string if it is null/undefined
                       value={field.value ?? ""}
                       className="w-full border rounded-md px-3 py-2"
                     />

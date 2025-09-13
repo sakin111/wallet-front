@@ -1,39 +1,40 @@
 import { baseApi } from "@/redux/baseApi";
 
+interface Wallet {
+  _id: string;
+  user: string;
+  balance: number;
+  status: "ACTIVE" | "BLOCKED";
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const walletApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    wallet: builder.query({
-      query: (userInfo) => ({
+    wallet: builder.query<Wallet, void>({
+      query: () => ({
         url: "/wallet/me",
         method: "GET",
-        data: userInfo,
       }),
+      providesTags: ["USER"],
     }),
-    // send: builder.mutation({
-    //   query: (payload) => ({
-    //     url: "/transaction/send",
-    //     method: "POST",
-    //     data: payload,
-    //   }),
-    //   invalidatesTags: ["TRANSACTION"],
-    // }),
-    // register: builder.mutation({
-    //   query: (userInfo) => ({
-    //     url: "/user/register",
-    //     method: "POST",
-    //     data: userInfo,
-    //   }),
-    // }),
 
+    blockUser: builder.mutation<Wallet, string>({
+      query: (userId) => ({
+        url: `/wallet/block/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USER"],
+    }),
 
-    // userInfo: builder.query({
-    //   query: () => ({
-    //     url: "/user/me",
-    //     method: "GET",
-    //   }),
-    //   providesTags: ["USER"],
-    // }),
+    unblockUser: builder.mutation<Wallet, string>({
+      query: (userId) => ({
+        url: `/wallet/unblock/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USER"],
+    }),
   }),
 });
 
-export const {useWalletQuery} = walletApi
+export const { useWalletQuery, useBlockUserMutation, useUnblockUserMutation } = walletApi;

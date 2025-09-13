@@ -63,6 +63,52 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
 
+    // admin endpoints
+
+allUsers: builder.query({
+  query: () => ({
+    url: "/admin/users",
+    method: "GET",
+  }),
+  providesTags: ["USER"], 
+}),
+
+    approveAgent: builder.mutation({
+      query: (id: string) => ({
+        url: `/admin/agents/${id}/approve`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USER"],
+    }),
+
+    suspendAgent: builder.mutation({
+      query: (id: string) => ({
+        url: `/admin/agents/${id}/suspend`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USER"],
+    }),
+
+
+      AdminInfo: builder.query({
+      query: () => ({
+        url: "/admin/adminProfile",
+        method: "GET",
+      }),
+      providesTags: ["USER"],
+    }),
+
+     updateAdminProfile: builder.mutation<
+      { data: UserProfile }, 
+      { id: string; body: Partial<UserProfile> } 
+    >({
+      query: ({ id, body }) => ({
+        url: `/user/${id}`,
+        method: "PATCH",
+        data: body
+      }),
+      invalidatesTags: ["USER"],
+    }),
 
   }),
 });
@@ -75,5 +121,10 @@ export const {
   useUserInfoQuery,
   useLogoutMutation,
   useUpdateUserProfileMutation,
-  useResetPasswordMutation
+  useResetPasswordMutation,
+  useAllUsersQuery,
+  useApproveAgentMutation,
+  useSuspendAgentMutation,
+  useAdminInfoQuery,
+  useUpdateAdminProfileMutation
 } = authApi;

@@ -1,7 +1,9 @@
+import { AdminProfile } from "@/pages/Admin/AdminProfile";
 import AllCommission from "@/pages/Admin/AllCommission";
 import AllTransaction from "@/pages/Admin/AllTransaction";
 import AllUsers from "@/pages/Admin/AllUsers";
 import Analytics from "@/pages/Admin/Analytics";
+import ManageAgent from "@/pages/Admin/ManageAgent";
 import type { ISidebarItem } from "@/Types";
 
 export const adminSidebarItems: ISidebarItem[] = [
@@ -12,6 +14,11 @@ export const adminSidebarItems: ISidebarItem[] = [
         title: "Analytics",
         url: "/admin/analytics",
         component: Analytics,
+      },
+      {
+        title: "Admin Profile",
+        url: "/admin/adminProfile",
+        component: AdminProfile,
       },
     ],
   },
@@ -38,6 +45,11 @@ export const adminSidebarItems: ISidebarItem[] = [
         title: "All Commissions",
         url: "allCommissions",
         component: AllCommission,
+      },
+      {
+        title: "Manage Agents",
+        url: "manageAgents",
+        component: ManageAgent,
       },
     ],
   },

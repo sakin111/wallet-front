@@ -24,15 +24,14 @@ dayjs.extend(timezone);
 export default function Deposit() {
   const [page, setPage] = useState(1);
 
-  // ✅ Use the stateful page instead of hardcoding 1
+
   const { data, isLoading } = useMyDepositsQuery({ page, limit: 5 });
   console.log(data, "this is from deposit");
 
-  // ✅ Handle nested response properly
   const deposits = Array.isArray(data?.data?.data) ? data.data.data : [];
   const meta = data?.data?.meta;
 
-  console.log(deposits, "parsed deposits");
+
 
   if (isLoading) {
     return (

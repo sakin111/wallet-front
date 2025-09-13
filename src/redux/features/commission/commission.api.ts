@@ -1,25 +1,29 @@
 import { baseApi } from "@/redux/baseApi";
+import type { CommissionFilter } from "@/Types";
 
 
 
 
 export const commissionApi = baseApi.injectEndpoints({
 
- 
+
   endpoints: (builder) => ({
-   
-   getMyCommission: builder.query<any, void>({
+
+    getMyCommission: builder.query<any, void>({
       query: () => ({
         url: "/commissions/my-commissions"
       }),
       providesTags: [],
     }),
-    getAllCommissions: builder.query<any, void>({
-      query: () => ({
-        url : "/commissions/all-commissions",
-      }),   
+    allCommissions: builder.query<any, CommissionFilter>({
+      query: (filters) => ({
+        url: "/commissions/all-commissions",
+        method: "GET",
+        params: filters,
+      }),
       providesTags: ["COMMISSION"],
     }),
+
 
 
   }),
@@ -30,7 +34,7 @@ export const commissionApi = baseApi.injectEndpoints({
 
 
 export const {
-useGetMyCommissionQuery,
-useGetAllCommissionsQuery
+  useGetMyCommissionQuery,
+  useAllCommissionsQuery
 
 } = commissionApi;

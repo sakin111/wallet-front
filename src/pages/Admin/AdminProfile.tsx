@@ -1,4 +1,5 @@
 
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -28,13 +29,14 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 import {
-  useUpdateUserProfileMutation,
-  useUserInfoQuery,
+    useAdminInfoQuery,
+  useUpdateAdminProfileMutation,
 } from "@/redux/features/auth/auth.api";
 import type { UserProfile } from "@/Types";
-import { ChangePassword } from "./ChangePassword";
+import { ChangePassword } from "../User/ChangePassword";
 
 
+// ✅ Only name & email schema
 const profileSchema = z.object({
   name: z
     .string()
@@ -44,9 +46,9 @@ const profileSchema = z.object({
 });
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
-export const Profile = () => {
-  const { data: user } = useUserInfoQuery(undefined);
-  const [updateProfile] = useUpdateUserProfileMutation();
+export const AdminProfile = () => {
+  const { data: user } = useAdminInfoQuery(undefined);
+  const [updateAdminProfile] = useUpdateAdminProfileMutation();
   const [isEditing, setIsEditing] = useState(false);
 
  
@@ -77,7 +79,7 @@ export const Profile = () => {
         return;
       }
 
-      await updateProfile({ id, body }).unwrap();
+      await updateAdminProfile({ id, body }).unwrap();
       toast.success("Profile updated successfully.");
       setIsEditing(false);
     } catch (error) {

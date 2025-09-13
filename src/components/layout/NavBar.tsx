@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { authApi, useLogoutMutation, useUserInfoQuery } from '@/redux/features/auth/auth.api';
 import { role } from '@/constant/role';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../ui/navigation-menu';
-
+import { TourWrapper } from '@/pages/TourWrapper';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +20,10 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { data } = useUserInfoQuery(undefined)
 
+
+   const steps = [
+    { target: '[data-tour="navigation-menu"]', content: "This is a all navigation menu" }
+  ];
 
   const handleLogout = async () => {
     await logout(undefined);
@@ -39,7 +43,8 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 w-full max-w-full z-50  bg-white/90 backdrop-blur-md border-b border-gray-200">
+  <TourWrapper tourId="navbar-tour" steps={steps} autoStart={true} delay={500}>
+      <nav className="fixed top-0 w-full max-w-full z-50  bg-white/90 backdrop-blur-md border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4  sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -49,7 +54,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
              {/* Navigation menu */}
-            <NavigationMenu className="max-md:hidden">
+            <NavigationMenu className="max-md:hidden" data-tour="navigation-menu">
               <NavigationMenuList className="gap-2">
                 {navItems.map((link, index) => (
                   <React.Fragment key={index}>
@@ -82,32 +87,7 @@ export default function Navbar() {
 
           {/* Login/Dashboard Button */}
           <div className="flex items-center space-x-4">
-            {/* {isAuthenticated ? (
-              <div className="flex items-center space-x-4">
-                <Button
-                  onClick={() => navigate(`/${user?.role}-dashboard`)}
-                  variant="outline"
-                  className="hidden md:flex"
-                >
-                  Dashboard
-                </Button>
-                <Button onClick={handleLogout} variant="ghost">
-                  Logout
-                </Button>
-              </div>
-            ) : (
-              <Button
-                onClick={() => navigate('/login')}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
-              >
-                <LogIn className="h-4 w-4 mr-2" />
-                Login
-              </Button>
-            )} */}
             <ModeToggle />
-
-
-
 
             {data?.data?.email && (
               <Button
@@ -182,5 +162,6 @@ export default function Navbar() {
         </motion.div>
       )}
     </nav>
+  </TourWrapper>
   );
 }

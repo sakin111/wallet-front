@@ -1,4 +1,5 @@
 import { baseApi } from "@/redux/baseApi";
+import type { IData } from "@/Types";
 
 
 
@@ -33,7 +34,7 @@ export const transactionApi = baseApi.injectEndpoints({
     }),
 
     myDeposits: builder.query<
-      { data: any[]; meta: { page: number; limit: number; total: number; totalPages: number } },
+      { data: IData; meta: { page: number; limit: number; total: number; totalPages: number } },
       { page?: number; limit?: number }>({
         query: ({ page = 1, limit = 5 }) => ({
           url: `/transaction/me?page=${page}&limit=${limit}`,
@@ -53,18 +54,43 @@ export const transactionApi = baseApi.injectEndpoints({
       invalidatesTags: ["WALLET", "TRANSACTION"],
     }),
 
-// agent transaction
+    // agent transaction
 
- AgentTransaction: builder.query({
+    AgentTransaction: builder.query({
       query: (userInfo) => ({
-        url:"/agent/transactions",
+        url: "/agent/transactions",
         method: "GET",
         data: userInfo,
       }),
       providesTags: ["TRANSACTION"]
     }),
 
+    agentCashOut: builder.query<
+      { data: IData; meta: { page: number; limit: number; total: number; totalPages: number } },
+      { page?: number; limit?: number }>({
+        query: ({ page = 1, limit = 5 }) => ({
+          url: `/transaction/cashOutHistory?page=${page}&limit=${limit}`,
+          method: "GET",
+        }),
+        transformResponse: (response: any) => response,
+      }),
 
+    // admin transaction
+    AllTransaction: builder.query({
+      query: () => ({
+        url: "/admin/transactions",
+        method: "GET",
+      })
+    }),
+
+    allTransactionsFilter: builder.query<any, Record<string, string>>({
+      query: (filters) => ({
+        url: "/admin/allTransactions",
+        method: "GET",
+        params: filters,
+      }),
+      providesTags: ["USER"],
+    }),
 
   }),
 
@@ -79,6 +105,9 @@ export const {
   useCashInMutation,
   useMyDepositsQuery,
   useWithdrawMutation,
-  useAgentTransactionQuery
+  useAgentTransactionQuery,
+  useAgentCashOutQuery,
+  useAllTransactionQuery,
+  useAllTransactionsFilterQuery
 
 } = transactionApi;
