@@ -4,4 +4,3 @@ publish = "dist"
 
 [build.environment]
 BUN_VERSION = "1.1.4"
-
