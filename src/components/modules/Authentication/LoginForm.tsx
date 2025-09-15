@@ -109,12 +109,11 @@ export function LoginForm({
                 )}
               />
 
-              {/* Submit */}
+
               <Button type="submit" className="w-full h-10 sm:h-11 text-sm sm:text-base">
                 Login
               </Button>
 
-              {/* Link */}
               <div className="text-center text-xs sm:text-sm">
                 Don&apos;t have an account?{" "}
                 <Link to="/register" className="underline hover:text-primary">

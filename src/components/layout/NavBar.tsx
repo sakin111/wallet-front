@@ -51,13 +51,13 @@ export default function Navbar() {
       <nav className="fixed top-0 left-0 w-full max-w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="container px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+
             <Logo />
 
-            {/* Desktop Navigation - Now includes medium and large screens */}
+
             <div className="hidden md:block">
               <div className="flex items-baseline space-x-4">
-                {/* Navigation menu */}
+
                 <NavigationMenu className="max-md:hidden" data-tour="navigation-menu">
                   <NavigationMenuList className="gap-2">
                     {getVisibleNavItems().map((link, index) => (
@@ -75,7 +75,7 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Login/Dashboard Button */}
+
             <div className="flex items-center space-x-4">
               <ModeToggle />
 
@@ -98,7 +98,7 @@ export default function Navbar() {
                 </Button>
               )}
 
-              {/* Mobile menu button */}
+
               <div className="md:hidden">
                 <Button
                   onClick={() => setIsOpen(!isOpen)}
@@ -112,7 +112,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile menu */}
+
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
