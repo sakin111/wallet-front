@@ -158,7 +158,7 @@ export default function Deposit() {
                           </Badge>
                         </div>
 
-                        {/* Date */}
+      
                         <div className="flex items-center gap-2 mb-3 text-sm text-gray-600">
                           <Calendar className="w-4 h-4" />
                           <span>
@@ -168,7 +168,7 @@ export default function Deposit() {
                           </span>
                         </div>
 
-                        {/* Details Grid */}
+                 
                         <div className="grid grid-cols-1 gap-2 pt-3 border-t border-gray-100">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-sm text-gray-500">
