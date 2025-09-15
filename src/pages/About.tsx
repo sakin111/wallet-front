@@ -4,7 +4,7 @@ export default function AboutPage() {
   return (
     <section className="w-full min-h-screen bg-white py-20">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Hero Section */}
+
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -24,7 +24,7 @@ export default function AboutPage() {
           </p>
         </motion.div>
 
-        {/* Mission & Vision */}
+
         <div className="mt-20 grid gap-12 md:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -59,7 +59,7 @@ export default function AboutPage() {
           </motion.div>
         </div>
 
-        {/* Values / Team Section */}
+
         <div className="mt-20 text-center">
           <h2 className="text-3xl font-bold text-gray-800 mb-6">Our Values</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
