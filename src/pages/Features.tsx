@@ -38,7 +38,7 @@ export default function Features() {
   return (
     <section className="w-full min-h-screen bg-white py-20">
       <div className="max-w-7xl mx-auto px-6 text-center">
-        {/* Heading */}
+
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -55,7 +55,7 @@ export default function Features() {
           Everything you need to send, save, and manage money — without the hassle.
         </p>
 
-        {/* Feature Grid */}
+
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, idx) => (
             <motion.div
