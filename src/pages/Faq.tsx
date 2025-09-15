@@ -40,7 +40,7 @@ export default function FAQPage() {
         <div className="space-y-4">
           {faqs.map((faq, idx) => (
             <div key={idx} className="border rounded-lg">
-              {/* Question */}
+
               <button
                 onClick={() => toggleFAQ(idx)}
                 className="w-full flex justify-between items-center px-5 py-4 text-left text-lg font-medium text-gray-800 focus:outline-none"
@@ -53,7 +53,7 @@ export default function FAQPage() {
                 />
               </button>
 
-              {/* Answer */}
+
               {openIndex === idx && (
                 <div className="px-5 pb-4 text-gray-600">{faq.a}</div>
               )}
