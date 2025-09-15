@@ -197,7 +197,7 @@ export default function Deposit() {
               </CardContent>
             </div>
 
-            {/* Desktop Table Layout - Hidden on mobile/tablet */}
+
             <div className="hidden lg:block">
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
