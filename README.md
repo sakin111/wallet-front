@@ -51,7 +51,7 @@ This project provides a **role-based transaction system** (Admin, Agent, User) w
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/digital-wallet.git
+git clone https://github.com/sakin111/wallet-front.git
 
 # Navigate to project
 cd digital-wallet
