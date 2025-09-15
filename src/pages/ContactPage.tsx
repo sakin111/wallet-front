@@ -2,7 +2,7 @@ export default function ContactPage() {
   return (
     <section className="w-full min-h-screen bg-white py-20">
       <div className="max-w-5xl mx-auto px-6">
-        {/* Header */}
+
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-800">Contact Us</h1>
           <p className="mt-4 text-gray-600">
@@ -11,7 +11,7 @@ export default function ContactPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12">
-          {/* Contact Info */}
+
           <div>
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
               Reach Us
@@ -27,7 +27,6 @@ export default function ContactPage() {
             </p>
           </div>
 
-          {/* Contact Form */}
           <div className="bg-gray-50 p-8 rounded-2xl shadow-sm">
             <form className="space-y-4">
               <input
