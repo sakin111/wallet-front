@@ -52,7 +52,7 @@ export default function Deposit() {
   }
 
   const totalDeposited = deposits.reduce(
-    (acc: number, d: any) => acc + (d.amount || 0),
+    (acc: number, d: number | string) => acc + (d.amount || 0),
     0
   );
 

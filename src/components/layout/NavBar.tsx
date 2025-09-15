@@ -39,7 +39,7 @@ export default function Navbar() {
     { name: 'Dashboard', href: '/user', role: role.user },
   ];
 
-  // Filter navigation items based on user role and public items
+
   const getVisibleNavItems = () => {
     return navItems.filter(item => 
       item.role === "PUBLIC" || item.role === data?.data?.role
