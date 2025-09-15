@@ -1,10 +1,7 @@
 [build]
-command = "bun run build"
-publish = "dist"  # or your actual output folder (e.g. 'build', 'out', etc.)
-node_bundler = "none"
-
-[[plugins]]
-package = "netlify-plugin-bun"
+command = "./_scripts/install-bun.sh && bun install && bun run build"
+publish = "dist"
 
 [build.environment]
-BUN_VERSION = "1.1.4"  # or whichever version you prefer
+BUN_VERSION = "1.1.4"
+
