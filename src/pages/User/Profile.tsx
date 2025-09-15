@@ -33,6 +33,7 @@ import {
 } from "@/redux/features/auth/auth.api";
 import type { UserProfile } from "@/Types";
 import { ChangePassword } from "./ChangePassword";
+import { TourWrapper } from "../TourWrapper";
 
 
 const profileSchema = z.object({
@@ -110,10 +111,17 @@ export const Profile = () => {
     }
   };
 
+      const steps = [
+    { target: '[data-tour="userProfile"]', content: "Here is an overview of the User Statistics " },
+
+  ];
+
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6 mt-16">
+<TourWrapper steps={steps} tourId="user-profile-tour" autoStart={true}>
+      <div className="max-w-4xl mx-auto space-y-6 mt-16">
       {/* Top Profile Card */}
-      <Card className="bg-gradient-card shadow-glow border-border">
+      <Card className="bg-gradient-card shadow-glow border-border" data-tour="userProfile">
         <CardContent className="pt-6">
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
             {/* Avatar */}
@@ -272,5 +280,6 @@ export const Profile = () => {
 </div>
 
     </div>
+</TourWrapper>
   );
 };

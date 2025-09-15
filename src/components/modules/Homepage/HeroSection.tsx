@@ -2,20 +2,32 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router";
+import { TourWrapper } from "@/pages/TourWrapper";
+
+ 
+
+
 
 export default function HeroSection() {
-  return (
-    <section className="w-full min-h-screen bg-gradient-to-br from-white via-gray-50  to-gray-100 flex items-center rounded-b-md">
-      <div className="w-full max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-12">
 
-        {/* Left Column */}
+    const steps = [
+    { target: '[data-tour="hero"]', content: "this is Hero section " },
+   
+  ];
+
+
+  return (
+  <TourWrapper steps={steps} tourId="hero-tour" autoStart={true} delay={500}>
+      <section className="w-full  max-w-full min-h-screen bg-gradient-to-br flex items-center rounded-b-md" data-tour="hero" >
+      <div className="w-full px-6 flex flex-col lg:flex-row items-center gap-12">
+
         <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left gap-8">
           
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-4xl md:text-6xl font-extrabold leading-tight text-gray-800"
+            className="text-4xl md:text-6xl font-extrabold leading-tight primary"
           >
             Your Digital{" "}
             <span className="bg-gradient-to-r from-teal-500 to-blue-600 bg-clip-text text-transparent">
@@ -49,7 +61,6 @@ export default function HeroSection() {
           </Link>
         </div>
 
-        {/* Right Column: Animated Abstract Illustration */}
         <div className="flex-1 flex items-center justify-center relative h-96">
           {/* Circle 1 */}
           <motion.div
@@ -73,7 +84,6 @@ export default function HeroSection() {
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
           />
 
-          {/* Glow Center (pulse effect) */}
           <motion.div
             className="absolute w-40 h-40 rounded-full bg-white/20 blur-2xl"
             animate={{ scale: [1, 1.3, 1] }}
@@ -83,5 +93,6 @@ export default function HeroSection() {
 
       </div>
     </section>
+  </TourWrapper>
   );
 }

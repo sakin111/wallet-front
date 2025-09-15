@@ -1,5 +1,4 @@
 
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -28,16 +27,14 @@ import { User, Mail, Edit, Save, X,  FolderPen, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import {
-    useAdminInfoQuery,
-  useUpdateAdminProfileMutation,
-} from "@/redux/features/auth/auth.api";
+
 import type { UserProfile } from "@/Types";
-import { ChangePassword } from "../User/ChangePassword";
+
 import { TourWrapper } from "../TourWrapper";
+import { useAgentInfoQuery, useUpdateAgentProfileMutation } from "@/redux/features/auth/auth.api";
+import { ChangePassword } from "../User/ChangePassword";
 
 
-// ✅ Only name & email schema
 const profileSchema = z.object({
   name: z
     .string()
@@ -47,9 +44,9 @@ const profileSchema = z.object({
 });
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
-export const AdminProfile = () => {
-  const { data: user } = useAdminInfoQuery(undefined);
-  const [updateAdminProfile] = useUpdateAdminProfileMutation();
+export const Profile = () => {
+  const { data: user } = useAgentInfoQuery(undefined);
+  const [updateProfile] = useUpdateAgentProfileMutation();
   const [isEditing, setIsEditing] = useState(false);
 
  
@@ -80,7 +77,7 @@ export const AdminProfile = () => {
         return;
       }
 
-      await updateAdminProfile({ id, body }).unwrap();
+      await updateProfile({ id, body }).unwrap();
       toast.success("Profile updated successfully.");
       setIsEditing(false);
     } catch (error) {
@@ -113,16 +110,17 @@ export const AdminProfile = () => {
     }
   };
 
-     const steps = [
-    { target: '[data-tour="adminProfile"]', content: "this is admin profile section" },
-   
+      const steps = [
+    { target: '[data-tour="agentProfile"]', content: "Here is an overview of the agent profile " },
+
   ];
 
+
   return (
-   <TourWrapper steps={steps} tourId="admin-profile-tour" autoStart={true}>
-     <div className="max-w-4xl mx-auto space-y-6 mt-16">
+<TourWrapper steps={steps} tourId="user-profile-tour" autoStart={true}>
+      <div className="max-w-4xl mx-auto space-y-6 mt-16">
       {/* Top Profile Card */}
-      <Card className="bg-gradient-card shadow-glow border-border" data-tour="adminProfile">
+      <Card className="bg-gradient-card shadow-glow border-border" data-tour="agentProfile">
         <CardContent className="pt-6">
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
             {/* Avatar */}
@@ -281,6 +279,6 @@ export const AdminProfile = () => {
 </div>
 
     </div>
-   </TourWrapper>
+</TourWrapper>
   );
 };

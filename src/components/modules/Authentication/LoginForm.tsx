@@ -54,19 +54,19 @@ export function LoginForm({
   }
 
   return (
-    <div className={cn("flex flex-col items-center justify-center  px-4", className)} {...props}>
-      <Card className="w-full max-w-md shadow-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-semibold">Login to your account</CardTitle>
-          <CardDescription>
+    <div className={cn("flex flex-col items-center justify-center min-h-screen p-3 sm:p-4 md:p-6", className)} {...props}>
+      <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md shadow-md">
+        <CardHeader className="text-center px-4 sm:px-6">
+          <CardTitle className="text-xl sm:text-2xl font-semibold">Login to your account</CardTitle>
+          <CardDescription className="text-sm sm:text-base">
             Enter your email and password to continue
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-4 sm:px-6">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-6"
+              className="space-y-4 sm:space-y-6"
             >
               {/* Email */}
               <FormField
@@ -74,10 +74,11 @@ export function LoginForm({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-sm sm:text-base">Email</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="john@example.com"
+                        className="h-10 sm:h-11 text-sm sm:text-base"
                         {...field}
                         value={field.value || ""}
                       />
@@ -93,11 +94,12 @@ export function LoginForm({
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-sm sm:text-base">Password</FormLabel>
                     <FormControl>
                        <Input
                       type="password"
                       placeholder="********"
+                      className="h-10 sm:h-11 text-sm sm:text-base"
                       {...field}
                       value={field.value || ""}
                     />
@@ -108,12 +110,12 @@ export function LoginForm({
               />
 
               {/* Submit */}
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full h-10 sm:h-11 text-sm sm:text-base">
                 Login
               </Button>
 
               {/* Link */}
-              <div className="text-center text-sm">
+              <div className="text-center text-xs sm:text-sm">
                 Don&apos;t have an account?{" "}
                 <Link to="/register" className="underline hover:text-primary">
                   Sign Up

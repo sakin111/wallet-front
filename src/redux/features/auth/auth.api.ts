@@ -110,6 +110,29 @@ allUsers: builder.query({
       invalidatesTags: ["USER"],
     }),
 
+
+    // agent endpoints
+
+       AgentInfo: builder.query({
+      query: () => ({
+        url: "/agent/me",
+        method: "GET",
+      }),
+      providesTags: ["USER"],
+    }),
+
+     updateAgentProfile: builder.mutation<
+      { data: UserProfile }, 
+      { id: string; body: Partial<UserProfile> } 
+    >({
+      query: ({ id, body }) => ({
+        url: `/user/${id}`,
+        method: "PATCH",
+        data: body
+      }),
+      invalidatesTags: ["USER"],
+    }),
+
   }),
 });
 
@@ -126,5 +149,7 @@ export const {
   useApproveAgentMutation,
   useSuspendAgentMutation,
   useAdminInfoQuery,
-  useUpdateAdminProfileMutation
+  useUpdateAdminProfileMutation,
+  useAgentInfoQuery,
+  useUpdateAgentProfileMutation
 } = authApi;

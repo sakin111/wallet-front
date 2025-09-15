@@ -20,6 +20,7 @@ import {
 import { useAllTransactionsFilterQuery } from "@/redux/features/transaction/transaction.api";
 import { Paginate } from "@/utils/Paginate";
 import { Search } from "../Search";
+import { TourWrapper } from "../TourWrapper";
 
 interface TransactionFilter {
   searchTerm: string;
@@ -72,15 +73,22 @@ export default function ManageTransactions() {
     );
   }
 
+    const steps = [
+    { target: '[data-tour="table1"]', content: "This is a user or agent total transaction and total user filter and advance search " },
+    { target: '[data-tour="table2"]', content: "This is actually transaction data" }
+  ];
+
+
   const { data: transactions, meta } = data;
 
   console.log(data);
 
   return (
-    <div className="p-4 space-y-4">
+<TourWrapper steps={steps} tourId="transaction-tour" autoStart={true} delay={500}>  
+      <div className="p-4 space-y-4">
       <h2 className="text-xl font-semibold">Transactions</h2>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" data-tour="table1">
         {/* Search */}
         <Search
           value={filters.searchTerm || ""}
@@ -117,7 +125,7 @@ export default function ManageTransactions() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border">
+      <div className="overflow-x-auto rounded-lg border" data-tour="table2">
         <Table>
           <TableHeader>
             <TableRow>
@@ -166,5 +174,6 @@ export default function ManageTransactions() {
         </div>
       )}
     </div>
+</TourWrapper>
   );
 }

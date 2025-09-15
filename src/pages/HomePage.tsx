@@ -6,7 +6,7 @@ import StatsSection from "@/components/modules/Homepage/StatSection";
 
 export default function HomePage () {
   return (
-    <div>
+    <div className="forBack">
       <HeroSection/>
       <FeaturesSection/>
       <HowItWorksSection/>

@@ -7,6 +7,7 @@ import { Loader2, Ban, CheckCircle } from "lucide-react";
 import { useBlockUserMutation, useUnblockUserMutation } from "@/redux/features/wallet/wallet.api";
 import { useAllUsersQuery } from "@/redux/features/auth/auth.api";
 import type { User } from "@/Types";
+import { TourWrapper } from "../TourWrapper";
 
 
 
@@ -54,8 +55,14 @@ export default function AllUsers() {
   const users = usersData?.data || [];
 
 
+    const steps = [
+    { target: '[data-tour="user1"]', content: "All authorized user Account" },
+   
+  ];
+
   return (
-    <Card className="shadow-sm rounded-2xl">
+  <TourWrapper steps={steps} tourId="all-users-tour" autoStart={true} delay={500}>
+      <Card className="shadow-sm rounded-2xl" data-tour="user1">
       <CardHeader>
         <CardTitle className="text-lg font-semibold">Manage Users</CardTitle>
       </CardHeader>
@@ -118,5 +125,6 @@ export default function AllUsers() {
         </Table>
       </CardContent>
     </Card>
+  </TourWrapper>
   );
 }

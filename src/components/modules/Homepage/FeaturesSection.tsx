@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { TourWrapper } from '@/pages/TourWrapper';
 import { motion } from 'framer-motion';
 import { 
   Shield, 
@@ -51,10 +52,18 @@ const features = [
   }
 ];
 
+
+     const steps = [
+    { target: '[data-tour="features"]', content: "this is feature section" },
+   
+  ];
+
+
 export default function FeaturesSection() {
   return (
-    <section id="features" className="py-24 bg-gradient-to-b from-gray-50 to-white mt-7 rounded-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+ <TourWrapper steps={steps} tourId="features-tour" autoStart={true} delay={500}>
+     <section  className="py-24 bg-gradient-to-b  mt-7 rounded-md max-w-full" data-tour="features">
+      <div className="container px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -62,7 +71,7 @@ export default function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold primary mb-4">
             Powerful Features for
             <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               {' '}Modern Finance
@@ -165,5 +174,6 @@ export default function FeaturesSection() {
         </motion.div>
       </div>
     </section>
+ </TourWrapper>
   );
 }

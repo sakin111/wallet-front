@@ -5,6 +5,7 @@ import AllUsers from "@/pages/Admin/AllUsers";
 import Analytics from "@/pages/Admin/Analytics";
 import ManageAgent from "@/pages/Admin/ManageAgent";
 import type { ISidebarItem } from "@/Types";
+import { ChartLine, CircleDollarSign, CircleUser, HandCoins, SlidersHorizontal, UsersRound } from "lucide-react";
 
 export const adminSidebarItems: ISidebarItem[] = [
   {
@@ -14,11 +15,13 @@ export const adminSidebarItems: ISidebarItem[] = [
         title: "Analytics",
         url: "/admin/analytics",
         component: Analytics,
+        icon: ChartLine
       },
       {
         title: "Admin Profile",
         url: "/admin/adminProfile",
         component: AdminProfile,
+        icon: CircleUser
       },
     ],
   },
@@ -30,11 +33,14 @@ export const adminSidebarItems: ISidebarItem[] = [
         title: "All Users",
         url: "allUsers",
         component: AllUsers,
+        icon: UsersRound
+        
       },
       {
         title: "All Transactions",
         url: "allTransactions",
         component: AllTransaction,
+        icon: CircleDollarSign
       },
     ],
   },
@@ -45,11 +51,13 @@ export const adminSidebarItems: ISidebarItem[] = [
         title: "All Commissions",
         url: "allCommissions",
         component: AllCommission,
+        icon: HandCoins
       },
       {
         title: "Manage Agents",
         url: "manageAgents",
         component: ManageAgent,
+        icon: SlidersHorizontal
       },
     ],
   },
