@@ -52,7 +52,7 @@ export default function Deposit() {
   }
 
   const totalDeposited = deposits.reduce(
-    (acc: number, d: number | string) => acc + (d.amount || 0),
+    (acc: number, d: any) => acc + (d.amount || 0),
     0
   );
 
@@ -91,7 +91,7 @@ export default function Deposit() {
 
   return (
     <div className="w-full max-w-7xl mx-auto p-3 sm:p-4 md:p-6">
-      {/* Header Section */}
+
       <div className="mb-6 sm:mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
           <div className="flex items-center gap-3">
@@ -108,7 +108,6 @@ export default function Deposit() {
             </div>
           </div>
 
-          {/* Total Balance Card */}
           <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
@@ -132,7 +131,7 @@ export default function Deposit() {
           <EmptyState />
         ) : (
           <>
-            {/* Mobile Card Layout - Visible only on small screens */}
+
             <div className="block lg:hidden">
               <CardContent className="p-0">
                 <div className="space-y-3 p-4">
@@ -142,7 +141,7 @@ export default function Deposit() {
                       className="border border-gray-200 hover:shadow-md transition-all duration-200 hover:border-gray-300"
                     >
                       <CardContent className="p-4">
-                        {/* Header Row - Amount and Status */}
+
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-2">
                             <DollarSign className="w-5 h-5 text-green-600" />
