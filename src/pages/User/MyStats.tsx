@@ -77,7 +77,7 @@ export default function MyStats() {
   return (
     <TourWrapper steps={steps} tourId="user-stats-tour" autoStart={true}>
       <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 md:p-6 max-w-full overflow-hidden">
-        {/* Stats Overview - Responsive Grid */}
+
         <div 
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" 
           data-tour="userStats1"
@@ -104,9 +104,9 @@ export default function MyStats() {
           />
         </div>
 
-        {/* Charts Section - Responsive Layout */}
+
         <div className="space-y-4 sm:space-y-6">
-          {/* Top Charts Row - Stack on mobile, side by side on larger screens */}
+
           <div 
             className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6" 
             data-tour="userStats2"
@@ -193,7 +193,7 @@ export default function MyStats() {
             </Card>
           </div>
 
-          {/* Pie Chart - Full width on all devices */}
+
           <Card className="w-full" data-tour="userStats3">
             <CardHeader className="pb-2 sm:pb-3">
               <CardTitle className="text-base sm:text-lg">Transaction Distribution</CardTitle>
