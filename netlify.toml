@@ -1,6 +1,7 @@
 [build]
-command = "./_scripts/install-bun.sh && bun install && bun run build"
+command = "bun install && bun run build"
 publish = "dist"
 
 [build.environment]
-BUN_VERSION = "1.1.4"
+VITE_BASE_URL = "/"
+BUN_VERSION = "latest" # Optional, only if you need a specific Bun version
