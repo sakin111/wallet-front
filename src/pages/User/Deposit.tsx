@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useMyDepositsQuery } from "@/redux/features/transaction/transaction.api";
 import {
@@ -9,89 +11,100 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Loader2, 
-  Calendar, 
-  DollarSign, 
-  CheckCircle, 
-  Clock, 
-  XCircle, 
+import {
+  Loader2,
+  Calendar,
+  DollarSign,
+  CheckCircle,
+  Clock,
+  XCircle,
   CreditCard,
   Hash,
   Tag,
-  TrendingUp
+  TrendingUp,
 } from "lucide-react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { Paginate } from "@/utils/Paginate";
+import type { Deposit, DepositStatus, PaginatedResponse } from "@/Types";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+
+
+
 export default function Deposit() {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading } = useMyDepositsQuery({ page, limit: 5 });
-  console.log(data, "this is from deposit");
+  const { data, isLoading } = useMyDepositsQuery<PaginatedResponse<Deposit>>({
+    page,
+    limit: 5,
+  });
 
-  const deposits = Array.isArray(data?.data?.data) ? data.data.data : [];
-  const meta = data?.data?.meta;
+  const deposits: Deposit[] = data?.data ?? [];
+  const meta = data?.meta;
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-48 sm:h-64 p-4">
-        <div className="text-center space-y-3">
-          <Loader2 className="animate-spin w-8 h-8 sm:w-10 sm:h-10 text-primary mx-auto" />
-          <p className="text-sm sm:text-base text-gray-500">Loading your deposits...</p>
-        </div>
-      </div>
-    );
-  }
+  const totalDeposited = deposits.reduce((acc, d) => acc + d.amount, 0);
 
-  const totalDeposited = deposits.reduce(
-    (acc: number, d: any) => acc + (d.amount || 0),
-    0
-  );
-
-  const getStatusConfig = (status: string) => {
+  const getStatusConfig = (status: DepositStatus) => {
     const config = {
-      completed: {
+      SUCCESS: {
         icon: <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />,
-        color: 'bg-green-100 text-green-700 border-green-200',
-        textColor: 'text-green-600'
+        color: "bg-green-100 text-green-700 border-green-200",
       },
-      pending: {
+      PENDING: {
         icon: <Clock className="w-3 h-3 sm:w-4 sm:h-4" />,
-        color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-        textColor: 'text-yellow-600'
+        color: "bg-yellow-100 text-yellow-700 border-yellow-200",
       },
-      failed: {
+      FAILED: {
         icon: <XCircle className="w-3 h-3 sm:w-4 sm:h-4" />,
-        color: 'bg-red-100 text-red-700 border-red-200',
-        textColor: 'text-red-600'
-      }
-    };
-    return config[status.toLowerCase()] || config.failed;
+        color: "bg-red-100 text-red-700 border-red-200",
+      },
+    } as const;
+
+    return config[status] ?? config.FAILED;
   };
+
+const metaWithTotalPages = meta
+  ? { ...meta, totalPages: Math.ceil(meta.total / meta.limit) }
+  : undefined;
+
 
   const EmptyState = () => (
     <div className="text-center py-12 sm:py-16 px-4">
       <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
         <DollarSign className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
       </div>
-      <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No Deposits Found</h3>
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+        No Deposits Found
+      </h3>
       <p className="text-sm sm:text-base text-gray-500 max-w-sm mx-auto">
-        Your deposit transactions will appear here once you make your first deposit.
+        Your deposit transactions will appear here once you make your first
+        deposit.
       </p>
     </div>
   );
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-48 sm:h-64 p-4">
+        <div className="text-center space-y-3">
+          <Loader2 className="animate-spin w-8 h-8 sm:w-10 sm:h-10 text-primary mx-auto" />
+          <p className="text-sm sm:text-base text-gray-500">
+            Loading your deposits...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-7xl mx-auto p-3 sm:p-4 md:p-6">
-
+      {/* Header */}
       <div className="mb-6 sm:mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
           <div className="flex items-center gap-3">
@@ -126,22 +139,22 @@ export default function Deposit() {
         </div>
       </div>
 
+      {/* Card/Table */}
       <Card className="shadow-lg border-0 bg-white overflow-hidden">
         {deposits.length === 0 ? (
           <EmptyState />
         ) : (
           <>
-
+            {/* Mobile View */}
             <div className="block lg:hidden">
               <CardContent className="p-0">
                 <div className="space-y-3 p-4">
-                  {deposits.map((deposit: any, index) => (
-                    <Card 
-                      key={deposit._id} 
+                  {deposits.map((deposit) => (
+                    <Card
+                      key={deposit._id}
                       className="border border-gray-200 hover:shadow-md transition-all duration-200 hover:border-gray-300"
                     >
                       <CardContent className="p-4">
-
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-2">
                             <DollarSign className="w-5 h-5 text-green-600" />
@@ -149,15 +162,15 @@ export default function Deposit() {
                               {deposit.amount.toLocaleString()} ৳
                             </span>
                           </div>
-                          <Badge 
+                          <Badge
                             className={`${getStatusConfig(deposit.status).color} flex items-center gap-1 text-xs px-2 py-1`}
                           >
                             {getStatusConfig(deposit.status).icon}
-                            {deposit.status.charAt(0).toUpperCase() + deposit.status.slice(1)}
+                            {deposit.status.charAt(0).toUpperCase() +
+                              deposit.status.slice(1).toLowerCase()}
                           </Badge>
                         </div>
 
-      
                         <div className="flex items-center gap-2 mb-3 text-sm text-gray-600">
                           <Calendar className="w-4 h-4" />
                           <span>
@@ -167,7 +180,6 @@ export default function Deposit() {
                           </span>
                         </div>
 
-                 
                         <div className="grid grid-cols-1 gap-2 pt-3 border-t border-gray-100">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -178,7 +190,7 @@ export default function Deposit() {
                               {deposit.type}
                             </Badge>
                           </div>
-                          
+
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-sm text-gray-500">
                               <Hash className="w-3 h-3" />
@@ -196,13 +208,14 @@ export default function Deposit() {
               </CardContent>
             </div>
 
-
+            {/* Desktop View */}
             <div className="hidden lg:block">
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
                   <Table className="min-w-full">
                     <TableCaption className="text-base py-4 bg-gray-50">
-                      Showing {deposits.length} of {meta?.total || deposits.length} transactions
+                      Showing {deposits.length} of {meta?.total || deposits.length}{" "}
+                      transactions
                     </TableCaption>
                     <TableHeader>
                       <TableRow className="bg-gray-50/50">
@@ -218,7 +231,9 @@ export default function Deposit() {
                             Amount
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-gray-700">Status</TableHead>
+                        <TableHead className="font-semibold text-gray-700">
+                          Status
+                        </TableHead>
                         <TableHead className="font-semibold text-gray-700">
                           <div className="flex items-center gap-2">
                             <Hash className="w-4 h-4" />
@@ -234,7 +249,7 @@ export default function Deposit() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {deposits.map((deposit: any) => (
+                      {deposits.map((deposit) => (
                         <TableRow
                           key={deposit._id}
                           className="hover:bg-gray-50 transition-colors border-b border-gray-100"
@@ -248,11 +263,12 @@ export default function Deposit() {
                             {deposit.amount.toLocaleString()} ৳
                           </TableCell>
                           <TableCell>
-                            <Badge 
+                            <Badge
                               className={`${getStatusConfig(deposit.status).color} flex items-center gap-1 w-fit`}
                             >
                               {getStatusConfig(deposit.status).icon}
-                              {deposit.status.charAt(0).toUpperCase() + deposit.status.slice(1)}
+                              {deposit.status.charAt(0).toUpperCase() +
+                                deposit.status.slice(1).toLowerCase()}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -261,9 +277,7 @@ export default function Deposit() {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant="outline">
-                              {deposit.type}
-                            </Badge>
+                            <Badge variant="outline">{deposit.type}</Badge>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -278,7 +292,7 @@ export default function Deposit() {
         {/* Pagination */}
         {meta && deposits.length > 0 && (
           <div className="p-4 sm:p-6 border-t border-gray-100 bg-gray-50/50">
-            <Paginate meta={meta} onPageChange={setPage} />
+            <Paginate meta={metaWithTotalPages} onPageChange={setPage} />
           </div>
         )}
       </Card>

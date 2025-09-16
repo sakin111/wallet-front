@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Send, ArrowDownLeft, CreditCard, TrendingUp } from 'lucide-react';
-import { useAgentTransactionQuery, useTransactionQuery } from '@/redux/features/transaction/transaction.api';
+import { useAgentTransactionQuery} from '@/redux/features/transaction/transaction.api';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -23,6 +23,7 @@ import {
 import { useWalletQuery } from '@/redux/features/wallet/wallet.api';
 import { StatsCard } from '../User/StatsCard';
 import { TourWrapper } from '../TourWrapper';
+import type { Transaction } from '@/Types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -31,39 +32,41 @@ const COLORS = ['#2563eb', '#16a34a', '#f97316', '#dc2626'];
 
 export default function Stats() {
   const { data: AgentData, isLoading } = useAgentTransactionQuery(undefined);
-  const transactions = AgentData?.data?.data || [];
+  const transactions: Transaction[] = AgentData?.data?.data || [];
 
 // const meta = transactionData?.data?.meta;
   const {data: walletData} = useWalletQuery(undefined)
 
   // Stats Calculations
-  const totalSpent = transactions
-    .filter((t: any) => t.type === 'SEND' ||  t.type === 'CASH_OUT' || t.type === 'CASH_IN')
-    .reduce((sum: number, t: any) => sum + t.amount, 0);
+const totalSpent = transactions
+  .filter((t) => ["SEND", "WITHDRAW", "DEPOSIT"].includes(t.type))
+  .reduce((sum, t) => sum + t.amount, 0);
 
-  const totalReceived = transactions
-    .filter((t: any) => t.type === 'CASH_IN')
-    .reduce((sum: number, t: any) => sum + t.amount, 0);
+const totalReceived = transactions
+  .filter((t) => t.type === "RECEIVE")
+  .reduce((sum, t) => sum + t.amount, 0);
 
-  const wallet = walletData?.data?.balance
+
+  const wallet = walletData?.balance || 0;
 
   // Transform data for charts
-  const lineData = transactions.map((item: any) => ({
-    date: dayjs(item.createdAt).tz('Asia/Dhaka').format('DD MMM'),
-    amount: item.amount,
-  }));
+const lineData = transactions.map((t) => ({
+  date: dayjs(t.createdAt).tz("Asia/Dhaka").format("DD MMM"),
+  amount: t.amount,
+}));
 
-  const typeSummary: Record<string, number> = {};
-  transactions.forEach((item: any) => {
-    typeSummary[item.type] = (typeSummary[item.type] || 0) + item.amount;
-  });
+const typeSummary: Record<string, number> = {};
+transactions.forEach((t) => {
+  typeSummary[t.type] = (typeSummary[t.type] || 0) + t.amount;
+});
 
-  const barData = Object.entries(typeSummary).map(([type, amount]) => ({
-    type,
-    amount,
-  }));
+const barData = Object.entries(typeSummary).map(([type, amount]) => ({
+  type,
+  amount,
+}));
 
-  const pieData = barData;
+const pieData = barData;
+
 
   if (isLoading) {
     return <p className="text-center text-gray-500 p-4">Loading dashboard...</p>;
@@ -205,7 +208,7 @@ export default function Stats() {
                     cy="50%"
                     outerRadius="60%"
                     innerRadius="20%"
-                    label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                    label={({ percent }) => `${((percent ?? 0) * 100).toFixed(0)}%`}
                     labelLine={false}
                   >
                     {pieData.map((_, index) => (

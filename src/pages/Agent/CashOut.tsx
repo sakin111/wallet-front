@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Calendar, DollarSign, CreditCard, User, Download, Filter } from "lucide-react";
+import { Loader2, Calendar, DollarSign, CreditCard, User } from "lucide-react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -27,8 +27,8 @@ export default function CashOut() {
 
   const { data, isLoading } = useAgentCashOutQuery({ page, limit });
 
-  const cashOuts = Array.isArray(data?.data?.data) ? data.data.data : [];
-  const meta = data?.data?.meta;
+  const cashOuts = data?.data ?? [];
+  const meta = data?.meta;
 
   // Calculate summary statistics
   const totalAmount = cashOuts.reduce((sum: number, c: IData) => sum + (c.amount || 0), 0);
@@ -72,7 +72,7 @@ export default function CashOut() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
-        
+
         {/* Header Section */}
         <div className="text-center lg:text-left">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -84,7 +84,7 @@ export default function CashOut() {
                 Track and manage your withdrawal history
               </p>
             </div>
- 
+
           </div>
         </div>
 
@@ -170,8 +170,8 @@ export default function CashOut() {
                   {page === 1 ? "No transactions found" : "You've reached the end"}
                 </h3>
                 <p className="text-gray-500 text-sm sm:text-base">
-                  {page === 1 
-                    ? "Your cash out transactions will appear here once you make them" 
+                  {page === 1
+                    ? "Your cash out transactions will appear here once you make them"
                     : "No more transactions to display"
                   }
                 </p>
@@ -216,8 +216,8 @@ export default function CashOut() {
                     </TableHeader>
                     <TableBody>
                       {cashOuts.map((c: IData, index: number) => (
-                        <TableRow 
-                          key={c._id} 
+                        <TableRow
+                          key={c._id}
                           className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50/30"} hover:bg-blue-50/50 transition-colors`}
                         >
                           <TableCell className="font-medium">
@@ -249,7 +249,7 @@ export default function CashOut() {
                             <span className="font-medium text-blue-700">{c.type}</span>
                           </TableCell>
                           <TableCell>
-                            <span className="text-sm text-gray-700">{c.from?.email}</span>
+                            <span className="text-sm text-gray-700">{c.email}</span>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -269,8 +269,8 @@ export default function CashOut() {
                     </TableHeader>
                     <TableBody>
                       {cashOuts.map((c: IData, index: number) => (
-                        <TableRow 
-                          key={c._id} 
+                        <TableRow
+                          key={c._id}
                           className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50/30"} hover:bg-blue-50/50 transition-colors`}
                         >
                           <TableCell>
@@ -299,7 +299,7 @@ export default function CashOut() {
                               <code className="bg-gray-100 px-2 py-1 rounded text-xs font-mono block mb-2">
                                 {c._id.slice(-8)}...
                               </code>
-                              <p className="text-sm text-gray-700">{c.from?.email}</p>
+                              <p className="text-sm text-gray-700">{c.email}</p>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -352,7 +352,7 @@ export default function CashOut() {
                               </div>
                               <p className="font-medium text-blue-700 ml-6">{c.type}</p>
                             </div>
-                            
+
                             <div>
                               <p className="text-sm font-medium text-gray-600 mb-1">Transaction ID</p>
                               <code className="bg-gray-100 px-2 py-1 rounded text-xs font-mono">
@@ -367,7 +367,7 @@ export default function CashOut() {
                               <User className="w-4 h-4 text-gray-600" />
                               <p className="text-sm font-medium text-gray-600">From</p>
                             </div>
-                            <p className="text-sm text-gray-700 ml-6 break-all">{c.from?.email}</p>
+                            <p className="text-sm text-gray-700 ml-6 break-all">{c.email}</p>
                           </div>
                         </CardContent>
                       </Card>

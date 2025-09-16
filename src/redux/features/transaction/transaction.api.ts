@@ -66,14 +66,19 @@ export const transactionApi = baseApi.injectEndpoints({
     }),
 
     agentCashOut: builder.query<
-      { data: IData; meta: { page: number; limit: number; total: number; totalPages: number } },
-      { page?: number; limit?: number }>({
-        query: ({ page = 1, limit = 5 }) => ({
-          url: `/transaction/cashOutHistory?page=${page}&limit=${limit}`,
-          method: "GET",
-        }),
-        transformResponse: (response: any) => response,
+      {
+        data: IData[];
+        meta: { page: number; limit: number; total: number; totalPages: number };
+      },
+      { page?: number; limit?: number }
+    >({
+      query: ({ page = 1, limit = 5 }) => ({
+        url: `/transaction/cashOutHistory?page=${page}&limit=${limit}`,
+        method: "GET",
       }),
+      transformResponse: (response: any) => response,
+    }),
+
 
     // admin transaction
     AllTransaction: builder.query({

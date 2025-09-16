@@ -70,6 +70,18 @@ export interface ProfileResponse {
 }
 
 
+export type DepositStatus = "PENDING" | "SUCCESS" | "FAILED";
+export type DepositType = "DEPOSIT" | "SEND" | "WITHDRAW" | "RECEIVE";
+
+export interface Deposit {
+  _id: string;
+  amount: number;
+  type: DepositType;
+  status: DepositStatus;
+  createdAt: string;
+}
+
+
 export interface IData {
   _id:string
   from: string;
@@ -81,6 +93,24 @@ export interface IData {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IMeta {
+  page: number;
+  limit: number;
+  total: number;
+}
+
+export interface PaginatedResponse<T> {
+  statusCode: number;
+  success: boolean;
+  message: string;
+  data: {
+    data: T[];
+    meta: IMeta;
+  };
+  isLoading: string
+}
+
 
 
 export type Status = "ACTIVE" | "BLOCKED" | "SUSPENDED" | "APPROVED";
@@ -108,7 +138,7 @@ export interface User{
 export interface Transaction {
   _id: string;
   amount: number;
-  type: "SEND" | "RECEIVE" | "DEPOSIT" | "WITHDRAW";
+   type: "SEND" | "RECEIVE" | "DEPOSIT" | "WITHDRAW" | "CASH_IN" | "CASH_OUT";
   status: "PENDING" | "SUCCESS" | "FAILED";
   user: {
     _id: string;

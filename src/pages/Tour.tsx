@@ -16,13 +16,14 @@ export default function Tour({ steps, runTour = false, onFinish }: TourProps) {
     setRun(runTour);
   }, [runTour]);
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status } = data;
-    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
-      setRun(false);
-      onFinish?.();
-    }
-  };
+const handleJoyrideCallback = (data: CallBackProps) => {
+  const status = data.status as "skipped" | "finished" | "error"; 
+  if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
+    setRun(false);
+    onFinish?.();
+  }
+};
+
 
   return (
     <Joyride

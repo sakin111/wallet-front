@@ -270,7 +270,7 @@ export const AdminProfile = () => {
                 <p className="font-medium">Account Verification</p>
                 <p className="text-sm text-muted-foreground">Identity verification status</p>
               </div>
-              <Badge variant="success">Verified  {user.data.isVerified}</Badge>
+              <Badge variant="default">Verified  {user.data.isVerified}</Badge>
             </div>
 
             <div className="pt-4 border-t">

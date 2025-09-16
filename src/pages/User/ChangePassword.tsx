@@ -31,7 +31,11 @@ const changePasswordSchema = z.object({
 type ChangePasswordForm = z.infer<typeof changePasswordSchema>;
 
 
-export function ChangePassword() {
+interface ChangePasswordProps {
+  userId: string;
+}
+
+export function ChangePassword({ userId }: ChangePasswordProps) {
   const [open, setOpen] = useState(false);
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
@@ -49,7 +53,7 @@ export function ChangePassword() {
         oldPassword: data.oldPassword,
         newPassword: data.newPassword,
       }).unwrap();
-
+        console.log("Changing password for user:", userId);
       toast.success("Password changed successfully!");
       form.reset();
       setOpen(false);
