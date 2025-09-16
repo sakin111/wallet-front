@@ -49,7 +49,7 @@ This project provides a **role-based transaction system** (Admin, Agent, User) w
 
 ---
 
-### Live Url
+### Live Link
 
 **frontend**: https://wallet-111.netlify.app/
 **backend**: https://b5a5-wallet.onrender.com/
