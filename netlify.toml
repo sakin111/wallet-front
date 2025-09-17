@@ -2,6 +2,3 @@
 command = "bun install && bun run build"
 publish = "dist"
 
-[build.environment]
-VITE_BASE_URL = "/"
-BUN_VERSION = "latest" # Optional, only if you need a specific Bun version
