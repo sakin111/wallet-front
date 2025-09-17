@@ -6,6 +6,7 @@ const axiosInstance = axios.create({
   withCredentials: true, 
 });
 
+
 let isRefreshing = false;
 
 let pendingQueue: {
@@ -60,7 +61,7 @@ axiosInstance.interceptors.response.use(
 
         processQueue(null);
 
-        // Retry original request
+
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
