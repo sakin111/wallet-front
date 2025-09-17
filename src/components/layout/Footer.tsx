@@ -279,7 +279,7 @@ export default function Footer() {
         </div>
 
         <p className="text-xs text-gray-500">
-          &copy; 2022. Company Name. All rights reserved.
+          &copy; 2025. Wallet. All rights reserved.
         </p>
       </div>
     </footer>
