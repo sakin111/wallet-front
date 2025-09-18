@@ -3,12 +3,13 @@ import type { CommissionFilter, PaginatedResponse, Commission } from "@/Types";
 
 export const commissionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMyCommission: builder.query<Commission[], void>({
-      query: () => ({
-        url: "/commissions/my-commissions",
-      }),
-      providesTags: ["COMMISSION"],
-    }),
+  getMyCommission: builder.query<PaginatedResponse<Commission>, void>({
+  query: () => ({
+    url: "/commissions/my-commissions",
+  }),
+  providesTags: ["COMMISSION"],
+}),
+
 
     allCommissions: builder.query<PaginatedResponse<Commission>, CommissionFilter>({
       query: (filters) => ({

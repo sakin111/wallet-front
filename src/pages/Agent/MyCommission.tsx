@@ -5,7 +5,12 @@ import { useGetMyCommissionQuery } from "@/redux/features/commission/commission.
 import { TourWrapper } from "../TourWrapper";
 
 export default function MyCommission() {
-  const { data, isLoading, isError } = useGetMyCommissionQuery();
+  const { data, isLoading, isError } = useGetMyCommissionQuery(undefined);
+
+if (!data?.data || !Array.isArray(data.data) || data.data.length === 0) return null;
+
+const { user, totalCommission, effectiveRate = 0 } = data.data[0];
+
 
   if (isLoading)
     return (
@@ -32,7 +37,7 @@ export default function MyCommission() {
       </div>
     );
 
-  const { user, totalCommission, effectiveRate } = data.data;
+
 
   const steps = [
     { target: '[data-tour="commission"]', content: "This is your agent commission dashboard" },
