@@ -21,8 +21,8 @@ import { toast } from "sonner";
 import { useWithdrawMutation } from "@/redux/features/transaction/transaction.api";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
-// --- Schema and Type ---
 const withdrawSchema = z.object({
 
   agentEmail: z.email("Enter a valid agent email"),
@@ -31,7 +31,7 @@ const withdrawSchema = z.object({
 
 type WithdrawForm = z.infer<typeof withdrawSchema>;
 
-// --- Component ---
+
 export default function Withdraw() {
   const navigate = useNavigate()
   const [withdraw, { isLoading }] = useWithdrawMutation();
@@ -39,9 +39,7 @@ export default function Withdraw() {
 
   const form = useForm<WithdrawForm>({
     resolver: zodResolver(withdrawSchema),
-    // Corrected default value to be valid according to the schema
     defaultValues: {
-
       agentEmail: "",
       amount: 1,
     },
@@ -66,11 +64,24 @@ export default function Withdraw() {
       toast.success("Money withdrawn successfully!");
       navigate("/user/myStats")
       form.reset({ agentEmail: "", amount: 1 });
-    } catch (err: any) {
-      console.error("Withdraw error:", err);
-      toast.error(err?.data?.message || "Failed to withdraw money");
+    }  catch (err: unknown) {
+      console.error(err);
+    
+      if (axios.isAxiosError(err)) {
+    
+        const message = (err.response?.data as { message?: string })?.message;
+    
+        if (message === "withDraw error") {
+          toast.error("withdraw failed");
+        } else {
+          toast.error(message || "transaction failed");
+        }
+      } else {
+    
+        toast.error((err as Error)?.message || "transaction failed");
+      }
     }
-  };
+      }
 
   return (
     <Card className="max-w-md mx-auto shadow-lg rounded-2xl border mt-24">

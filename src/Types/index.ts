@@ -98,6 +98,7 @@ export interface IMeta {
   page: number;
   limit: number;
   total: number;
+  totalPages: number;
 }
 
 export interface PaginatedResponse<T> {
@@ -108,8 +109,9 @@ export interface PaginatedResponse<T> {
     data: T[];
     meta: IMeta;
   };
-  isLoading: string
+  isLoading?: string
 }
+
 
 
 
@@ -149,9 +151,29 @@ export interface Transaction {
 }
 
 
-export interface CommissionFilter {
-  search?: string;
-  page?: string;
-  limit?: string;
-  type?: string; 
+export interface Commission {
+  _id: string;
+  user?: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  name?: string;
+  email?: string;
+  commissionRate: number;
+  totalCommission: number;
+  createdAt: string;
 }
+
+
+
+export interface CommissionFilter extends Record<string, string> {
+  searchTerm: string; 
+  page: string;
+  limit: string;
+  type: string;
+  sort: string;
+}
+
+
+

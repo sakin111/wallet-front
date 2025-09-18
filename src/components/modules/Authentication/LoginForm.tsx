@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
 
+import axios from "axios"
+
 
 export function LoginForm({
   className,
@@ -43,14 +45,23 @@ export function LoginForm({
         toast.success("Logged in successfully")
         navigate("/")
       }
-    } catch (err: any) {
-      console.error(err)
+    } catch (err: unknown) {
+  console.error(err);
 
-      if (err?.data?.message === "Password does not match") {
-        toast.error("Invalid credentials")
-      }
-      else toast.error(err?.data?.message || "Login failed")
+  if (axios.isAxiosError(err)) {
+
+    const message = (err.response?.data as { message?: string })?.message;
+
+    if (message === "Password does not match") {
+      toast.error("Invalid credentials");
+    } else {
+      toast.error(message || "Login failed");
     }
+  } else {
+    // Fallback for non-Axios errors
+    toast.error((err as Error)?.message || "Login failed");
+  }
+}
   }
 
   return (

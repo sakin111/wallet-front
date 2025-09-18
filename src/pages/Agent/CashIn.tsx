@@ -22,6 +22,7 @@ import {
 } from "react-aria-components";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 
 const CashInMoneySchema = z.object({
@@ -52,24 +53,37 @@ export default function SendMoney() {
       return;
     }
 
-const payload = {
-  agentId: userData.data.email,
-  toUserId: data.toUserId,       
-  amount: data.amount,
-};
+    const payload = {
+      agentId: userData.data.email,
+      toUserId: data.toUserId,
+      amount: data.amount,
+    };
 
 
     try {
       const result = await cashIn(payload).unwrap();
       console.log("Send result:", result);
       toast.success("Money sent successfully!");
-       navigate("/agent/stats")
+      navigate("/agent/stats")
       form.reset({ toUserId: "", amount: 1 });
-    } catch (err: any) {
-      console.error("Send money error:", err);
-      toast.error(err?.data?.message || "Failed to send money");
+    } catch (err: unknown) {
+      console.error(err);
+
+      if (axios.isAxiosError(err)) {
+
+        const message = (err.response?.data as { message?: string })?.message;
+
+        if (message === "cash in error") {
+          toast.error("Failed to cash in");
+        } else {
+          toast.error(message || "transaction failed");
+        }
+      } else {
+
+        toast.error((err as Error)?.message || "transaction failed");
+      }
     }
-  };
+  }
 
 
   return (

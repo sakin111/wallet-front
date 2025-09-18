@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useResetPasswordMutation } from "@/redux/features/auth/auth.api";
 import { z } from "zod";
+import axios from "axios";
 
 // --- Zod schema ---
 const changePasswordSchema = z.object({
@@ -57,10 +58,24 @@ export function ChangePassword({ userId }: ChangePasswordProps) {
       toast.success("Password changed successfully!");
       form.reset();
       setOpen(false);
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to change password");
+    } catch (err: unknown) {
+      console.error(err);
+    
+      if (axios.isAxiosError(err)) {
+    
+        const message = (err.response?.data as { message?: string })?.message;
+    
+        if (message === "failed to change password") {
+          toast.error("failed to change password");
+        } else {
+          toast.error(message || "failed to change password");
+        }
+      } else {
+    
+        toast.error((err as Error)?.message || "failed to change password");
+      }
     }
-  };
+      }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -21,6 +21,7 @@ import {
   NumberField,
 } from "react-aria-components";
 import { MinusIcon, PlusIcon } from "lucide-react";
+import axios from "axios";
 
 
 const sendMoneySchema = z.object({
@@ -62,12 +63,23 @@ const payload = {
       console.log("Send result:", result);
       toast.success("Money sent successfully!");
       form.reset({ recipient: "", amount: 1 });
-    } catch (err: any) {
-      console.error("Send money error:", err);
-      toast.error(err?.data?.message || "Failed to send money");
-    }
-  };
+    } catch (err: unknown) {
+     console.error(err);
 
+  if (axios.isAxiosError(err)) {
+
+    const message = (err.response?.data as { message?: string })?.message;
+
+    if (message === "send money error") {
+      toast.error("failed to send money");
+    } else {
+      toast.error(message || "transaction failed");
+    }
+  } else {
+    toast.error((err as Error)?.message || "transaction failed");
+  }
+}
+  }
 
   return (
     <Card className="max-w-md mx-auto shadow-lg rounded-2xl border mt-24">

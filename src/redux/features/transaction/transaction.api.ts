@@ -1,7 +1,22 @@
+
+
 import { baseApi } from "@/redux/baseApi";
-import type { IData } from "@/Types";
+import type { Deposit, IData, PaginatedResponse } from "@/Types";
 
 
+interface RawPaginatedDepositResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+  data: {
+    data: Deposit[];
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  };
+}
 
 
 export const transactionApi = baseApi.injectEndpoints({
@@ -33,15 +48,16 @@ export const transactionApi = baseApi.injectEndpoints({
       invalidatesTags: ["TRANSACTION"],
     }),
 
-    myDeposits: builder.query<
-      { data: IData; meta: { page: number; limit: number; total: number; totalPages: number } },
-      { page?: number; limit?: number }>({
-        query: ({ page = 1, limit = 5 }) => ({
-          url: `/transaction/me?page=${page}&limit=${limit}`,
-          method: "GET",
-        }),
-        transformResponse: (response: any) => response,
-      }),
+myDeposits: builder.query<PaginatedResponse<Deposit>, { page?: number; limit?: number }>({
+  query: ({ page = 1, limit = 5 }) => ({
+    url: `/transaction/me?page=${page}&limit=${limit}`,
+    method: "GET",
+  }),
+
+  //@ts-expect-error for response
+  transformResponse: (response: RawPaginatedDepositResponse) => response
+
+}),
 
 
 
@@ -76,6 +92,7 @@ export const transactionApi = baseApi.injectEndpoints({
         url: `/transaction/cashOutHistory?page=${page}&limit=${limit}`,
         method: "GET",
       }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transformResponse: (response: any) => response,
     }),
 
@@ -88,6 +105,7 @@ export const transactionApi = baseApi.injectEndpoints({
       })
     }),
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
     allTransactionsFilter: builder.query<any, Record<string, string>>({
       query: (filters) => ({
         url: "/admin/allTransactions",

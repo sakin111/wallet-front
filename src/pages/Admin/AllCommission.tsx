@@ -25,14 +25,9 @@ import { Loader2, Search } from "lucide-react";
 import { useState } from "react";
 import { Paginate } from "@/utils/Paginate";
 import { useAllCommissionsQuery } from "@/redux/features/commission/commission.api";
+import type { Commission, CommissionFilter, PaginatedResponse } from "@/Types";
 
-interface CommissionFilter extends Record<string, string> {
-  searchTerm: string; 
-  page: string;
-  limit: string;
-  type: string;
-  sort: string;
-}
+
 
 export default function AllCommission() {
   const [filters, setFilters] = useState<CommissionFilter>({
@@ -44,8 +39,8 @@ export default function AllCommission() {
   });
 
   const { data, isLoading, isFetching } = useAllCommissionsQuery(filters);
-  const commissions = data?.data || [];
-  const meta = data?.meta;
+  const commissions: Commission[] = data?.data?.data || [];
+  const meta =(data as PaginatedResponse<Commission>).data?.meta;
   
 console.log(commissions);
 
@@ -121,10 +116,10 @@ console.log(commissions);
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {commissions.map((c: any) => (
+                {commissions.map((c) => (
                   <TableRow key={c._id}>
-                    <TableCell>{c.user?.name || c.name || "N/A"}</TableCell>
-                    <TableCell>{c.user?.email || c.email || "N/A"}</TableCell>
+                    <TableCell>{c.user?.name || "N/A"}</TableCell>
+                    <TableCell>{c.user?.email || "N/A"}</TableCell>
                     <TableCell>{c.commissionRate ?? 0}%</TableCell>
                     <TableCell>${(c.totalCommission || 0).toFixed(2)}</TableCell>
                     <TableCell>
