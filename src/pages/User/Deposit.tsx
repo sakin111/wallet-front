@@ -49,7 +49,10 @@ export default function Deposit() {
   const deposits: Deposit[] = data?.data ?? [];
   const meta = data?.meta;
 
-  const totalDeposited = deposits.reduce((acc, d) => acc + d.amount, 0);
+  const totalDeposited = Array.isArray(deposits)
+  ? deposits.reduce((acc, d) => acc + d.amount, 0)
+  : 0;
+
 
   const getStatusConfig = (status: DepositStatus) => {
     const config = {
