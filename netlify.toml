@@ -2,3 +2,7 @@
 command = "bun install && bun run build"
 publish = "dist"
 BUN_VERSION = "latest" # Optional, only if you need a specific Bun version
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
