@@ -70,16 +70,47 @@ export interface ProfileResponse {
 }
 
 
-export type DepositStatus = "PENDING" | "SUCCESS" | "FAILED";
-export type DepositType = "DEPOSIT" | "SEND" | "WITHDRAW" | "RECEIVE";
+export type DepositStatus = "SUCCESS" | "PENDING" | "FAILED" | "completed" | "pending";
 
 export interface Deposit {
   _id: string;
   amount: number;
-  type: DepositType;
   status: DepositStatus;
+  type: string;
   createdAt: string;
+  updatedAt?: string;
 }
+
+export interface Meta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages:number;
+}
+
+export interface PaginatedDepositData {
+  data: Deposit[];
+  meta: Meta;
+}
+
+export interface RawPaginatedDepositResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+  data: PaginatedDepositData;
+}
+
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: Meta;
+}
+
+export interface DepositQueryParams {
+  page?: number;
+  limit?: number;
+}
+
 
 
 export interface IData {
@@ -101,16 +132,6 @@ export interface IMeta {
   totalPages: number;
 }
 
-export interface PaginatedResponse<T> {
-  statusCode: number;
-  success: boolean;
-  message: string;
-  data: {
-    data: T[];
-    meta: IMeta;
-  };
-  isLoading?: string
-}
 
 
 
@@ -175,5 +196,12 @@ export interface CommissionFilter extends Record<string, string> {
   sort: string;
 }
 
+
+export interface CommissionResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+  data: Commission[];
+}
 
 

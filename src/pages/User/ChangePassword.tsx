@@ -1,4 +1,3 @@
-"use client";
 
 import { useState } from "react";
 import {
@@ -18,7 +17,7 @@ import { useResetPasswordMutation } from "@/redux/features/auth/auth.api";
 import { z } from "zod";
 import axios from "axios";
 
-// --- Zod schema ---
+
 const changePasswordSchema = z.object({
   oldPassword: z.string().min(8, "Old password must be at least 8 characters"),
   newPassword: z.string()

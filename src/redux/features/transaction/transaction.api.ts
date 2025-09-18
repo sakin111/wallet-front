@@ -1,22 +1,8 @@
 
 
 import { baseApi } from "@/redux/baseApi";
-import type { Deposit, IData, PaginatedResponse } from "@/Types";
+import type { Deposit, IData, PaginatedResponse, RawPaginatedDepositResponse } from "@/Types";
 
-
-interface RawPaginatedDepositResponse {
-  statusCode: number;
-  success: boolean;
-  message: string;
-  data: {
-    data: Deposit[];
-    meta: {
-      page: number;
-      limit: number;
-      total: number;
-    };
-  };
-}
 
 
 export const transactionApi = baseApi.injectEndpoints({
@@ -48,16 +34,18 @@ export const transactionApi = baseApi.injectEndpoints({
       invalidatesTags: ["TRANSACTION"],
     }),
 
-myDeposits: builder.query<PaginatedResponse<Deposit>, { page?: number; limit?: number }>({
-  query: ({ page = 1, limit = 5 }) => ({
-    url: `/transaction/me?page=${page}&limit=${limit}`,
-    method: "GET",
-  }),
-
-  //@ts-expect-error for response
-  transformResponse: (response: RawPaginatedDepositResponse) => response
-
-}),
+    myDeposits: builder.query<PaginatedResponse<Deposit>, { page?: number; limit?: number }>({
+      query: ({ page = 1, limit = 5 }) => ({
+        url: `/transaction/me?page=${page}&limit=${limit}`,
+        method: "GET",
+      }),
+      transformResponse: (response: RawPaginatedDepositResponse): PaginatedResponse<Deposit> => {
+        return {
+          data: response.data.data,
+          meta: response.data.meta
+        };
+      }
+    }),
 
 
 
@@ -92,7 +80,7 @@ myDeposits: builder.query<PaginatedResponse<Deposit>, { page?: number; limit?: n
         url: `/transaction/cashOutHistory?page=${page}&limit=${limit}`,
         method: "GET",
       }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transformResponse: (response: any) => response,
     }),
 
@@ -105,7 +93,7 @@ myDeposits: builder.query<PaginatedResponse<Deposit>, { page?: number; limit?: n
       })
     }),
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     allTransactionsFilter: builder.query<any, Record<string, string>>({
       query: (filters) => ({
         url: "/admin/allTransactions",

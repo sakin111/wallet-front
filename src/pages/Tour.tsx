@@ -1,4 +1,4 @@
-// Your Tour component from earlier
+
 import { useEffect, useState } from "react";
 import Joyride, { STATUS } from "react-joyride"; 
 import type { Step, CallBackProps} from "react-joyride"; 

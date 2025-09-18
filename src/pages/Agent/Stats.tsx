@@ -34,10 +34,9 @@ export default function Stats() {
   const { data: AgentData, isLoading } = useAgentTransactionQuery(undefined);
   const transactions: Transaction[] = AgentData?.data?.data || [];
 
-// const meta = transactionData?.data?.meta;
   const {data: walletData} = useWalletQuery(undefined)
 
-  // Stats Calculations
+
 const totalSpent = transactions
   .filter((t) => ["SEND", "WITHDRAW", "DEPOSIT"].includes(t.type))
   .reduce((sum, t) => sum + t.amount, 0);
@@ -49,7 +48,7 @@ const totalReceived = transactions
 
   const wallet = walletData?.balance || 0;
 
-  // Transform data for charts
+
 const lineData = transactions.map((t) => ({
   date: dayjs(t.createdAt).tz("Asia/Dhaka").format("DD MMM"),
   amount: t.amount,
@@ -82,7 +81,7 @@ const pieData = barData;
   return (
     <TourWrapper steps={steps} tourId="Agent-tour" autoStart={true} delay={500}>
       <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 md:p-6 max-w-full overflow-hidden" data-tour="agentStats1">
-        {/* Stats Overview - Responsive Grid */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <StatsCard
             title="Total Spent"
@@ -106,11 +105,11 @@ const pieData = barData;
           />
         </div>
 
-        {/* Charts Section - Responsive Layout */}
+
         <div className="space-y-4 sm:space-y-6">
-          {/* Top Charts Row - Stack on mobile, side by side on larger screens */}
+
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6" data-tour="agentStats2">
-            {/* Line Chart */}
+
             <Card className="w-full">
               <CardHeader className="pb-2 sm:pb-3">
                 <CardTitle className="text-base sm:text-lg">Transaction Trend</CardTitle>
@@ -151,7 +150,6 @@ const pieData = barData;
               </CardContent>
             </Card>
 
-            {/* Bar Chart */}
             <Card className="w-full" data-tour="agentStats3">
               <CardHeader className="pb-2 sm:pb-3">
                 <CardTitle className="text-base sm:text-lg">Amount by Type</CardTitle>
@@ -192,7 +190,7 @@ const pieData = barData;
             </Card>
           </div>
 
-          {/* Pie Chart - Full width on all devices */}
+
           <Card className="w-full" data-tour="agentStats4">
             <CardHeader className="pb-2 sm:pb-3">
               <CardTitle className="text-base sm:text-lg">Transaction Distribution</CardTitle>
