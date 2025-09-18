@@ -11,7 +11,7 @@ export const transactionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     transaction: builder.query({
       query: (userInfo) => ({
-        url: "/transaction/me",
+        url: "/transaction/meStats",
         method: "GET",
         data: userInfo,
       }),
