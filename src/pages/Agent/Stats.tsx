@@ -46,7 +46,7 @@ const totalReceived = transactions
   .reduce((sum, t) => sum + t.amount, 0);
 
 
-  const wallet = walletData?.balance || 0;
+  const wallet = walletData?.data?.balance || 0;
 
 
 const lineData = transactions.map((t) => ({

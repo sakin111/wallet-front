@@ -1,12 +1,14 @@
 import { baseApi } from "@/redux/baseApi";
 
 interface Wallet {
-  _id: string;
+data: {
+    _id: string;
   user: string;
   balance: number;
   status: "ACTIVE" | "BLOCKED";
   createdAt: string;
   updatedAt: string;
+}
 }
 
 export const walletApi = baseApi.injectEndpoints({

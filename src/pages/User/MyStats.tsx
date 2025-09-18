@@ -35,7 +35,10 @@ export default function MyStats() {
   const { data: walletData } = useWalletQuery(undefined);
 
   const transactions: Transaction[] = transactionData?.data?.data || [];
-  const wallet = walletData?.balance ?? 0;
+  const wallet = walletData?.data?.balance ?? 0;
+
+
+  
 
   // Stats Calculations
   const totalSpent = transactions
@@ -93,7 +96,7 @@ export default function MyStats() {
           />
           <StatsCard
             title="Total Balance"
-            value={`$${wallet.toLocaleString()}`}
+            value={`$${wallet.toString()}`}
             icon={<TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
           />
         </div>
