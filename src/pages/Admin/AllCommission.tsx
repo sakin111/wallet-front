@@ -38,7 +38,7 @@ import {
 } from "lucide-react";
 import { useState, type JSX } from "react";
 import { Paginate } from "@/utils/Paginate";
-import { useAllCommissionsQuery } from "@/redux/features/commission/commission.api";
+import { useAllCommissionsQuery, useSystemCommissionQuery } from "@/redux/features/commission/commission.api";
 import type { Commission, CommissionFilter, Meta } from "@/Types";
 
 
@@ -53,6 +53,9 @@ export default function AllCommission(): JSX.Element {
   });
 
   const { data, isLoading, isFetching, error, refetch } = useAllCommissionsQuery(filters);
+ const {data : system} = useSystemCommissionQuery(undefined)
+
+   const systemRate = system?.data?.commissionRate
   
   // Type-safe data extraction
   const commissions: Commission[] = data?.data|| [];
@@ -60,7 +63,7 @@ export default function AllCommission(): JSX.Element {
   const totalCommissions = commissions.length;
   const totalAmount = commissions.reduce((sum, c) => sum + (c.totalCommission || 0), 0);
 
-  console.log("Commissions data:", commissions);
+
 
   // Event handlers with proper typing
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -97,9 +100,7 @@ export default function AllCommission(): JSX.Element {
     }).format(amount);
   };
 
-  const formatPercentage = (rate: number): string => {
-    return (rate * 100).toFixed(2);
-  };
+  
 
   const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -215,10 +216,7 @@ export default function AllCommission(): JSX.Element {
               <div>
                 <p className="text-sm font-medium text-gray-600">Average Rate</p>
                 <p className="text-2xl font-bold text-purple-700">
-                  {commissions.length > 0 
-                    ? formatPercentage(commissions.reduce((sum, c) => sum + c.commissionRate, 0) / commissions.length)
-                    : "0.00"
-                  }%
+                  {systemRate}%
                 </p>
               </div>
             </div>
@@ -366,7 +364,7 @@ export default function AllCommission(): JSX.Element {
                           </div>
                           <div>
                             <p className="text-lg font-bold text-purple-700">
-                              {formatPercentage(commission.commissionRate)}%
+                              {systemRate}%
                             </p>
                             <p className="text-xs text-gray-600">Rate</p>
                           </div>
@@ -463,7 +461,7 @@ export default function AllCommission(): JSX.Element {
                           <TableCell className="py-4">
                             <div className="flex items-center gap-2">
                               <span className="text-lg font-bold text-purple-700">
-                                {formatPercentage(commission.commissionRate)}%
+                                {systemRate}%
                               </span>
                               <Badge className={`text-xs ${rateCategory.color}`}>
                                 {rateCategory.label}
