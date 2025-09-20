@@ -37,7 +37,6 @@ export default function MyStats() {
   const transactions: Transaction[] = transactionData?.data?.data || [];
   const wallet = walletData?.data?.balance ?? 0;
 
-console.log(transactions)
   
 
   // Stats Calculations

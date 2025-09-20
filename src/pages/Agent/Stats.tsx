@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Send, ArrowDownLeft, CreditCard, TrendingUp } from 'lucide-react';
-import { useAgentTransactionQuery} from '@/redux/features/transaction/transaction.api';
+import { useAgentStatsQuery} from '@/redux/features/transaction/transaction.api';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -31,8 +31,10 @@ dayjs.extend(timezone);
 const COLORS = ['#2563eb', '#16a34a', '#f97316', '#dc2626'];
 
 export default function Stats() {
-  const { data: AgentData, isLoading } = useAgentTransactionQuery(undefined);
+  const { data: AgentData, isLoading } = useAgentStatsQuery(undefined);
   const transactions: Transaction[] = AgentData?.data?.data || [];
+
+  console.log(AgentData);
 
   const {data: walletData} = useWalletQuery(undefined)
 
@@ -42,7 +44,7 @@ const totalSpent = transactions
   .reduce((sum, t) => sum + t.amount, 0);
 
 const totalReceived = transactions
-  .filter((t) => t.type === "RECEIVE")
+  .filter((t) => t.type === "CASH_OUT")
   .reduce((sum, t) => sum + t.amount, 0);
 
 

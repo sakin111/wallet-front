@@ -19,7 +19,19 @@ export const commissionApi = baseApi.injectEndpoints({
       }),
       providesTags: ["COMMISSION"],
     }),
+// system commission
+
+systemCommission: builder.query({
+  query: () =>({
+    url:"system/commission-rate",
+    method:"GET"
+  })
+})
+
+
+
+
   }),
 });
 
-export const { useGetMyCommissionQuery, useAllCommissionsQuery } = commissionApi;
+export const { useGetMyCommissionQuery, useAllCommissionsQuery, useSystemCommissionQuery } = commissionApi;

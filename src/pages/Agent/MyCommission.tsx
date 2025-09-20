@@ -1,10 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, Percent, User, TrendingUp, AlertCircle, RefreshCw } from "lucide-react";
-import { useGetMyCommissionQuery } from "@/redux/features/commission/commission.api";
+import { useGetMyCommissionQuery, useSystemCommissionQuery } from "@/redux/features/commission/commission.api";
 import { TourWrapper } from "../TourWrapper";
 import type { JSX } from "react";
 import type { Commission } from "@/Types";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+
 
 
 
@@ -17,19 +22,24 @@ type UserStatus = "ACTIVE" | "INACTIVE" | "PENDING" | "SUSPENDED";
 
 export default function MyCommission(): JSX.Element {
   const { data, isLoading, isError, refetch } = useGetMyCommissionQuery(undefined);
+  const {data : system} = useSystemCommissionQuery(undefined)
 
+  const systemRate = system?.data?.commissionRate
+
+  dayjs.extend(utc);
+dayjs.extend(timezone);
   // Type-safe data extraction using your Commission interface
-  const commissionData: Commission | null = 
-    data?.data && Array.isArray(data.data) && data.data.length > 0 
-      ? data.data[0] 
-      : null;
+const commissionData: Commission | null =
+  Array.isArray(data?.data) ? data.data[0] : data?.data ?? null;
+
+      
 
   // Extract user information with fallback to direct fields
   const userName: string = commissionData?.user?.name || commissionData?.name || "Unknown User";
   const userEmail: string = commissionData?.user?.email || commissionData?.email || "No email";
 
   const totalCommission: number = commissionData?.totalCommission || 0;
-  const commissionRate: number = commissionData?.commissionRate || 0;
+  const commissionRate: number = systemRate || 0;
 
   // Loading state
   if (isLoading) {
@@ -119,15 +129,15 @@ export default function MyCommission(): JSX.Element {
 
   // Helper functions
   const getPerformanceLevel = (commission: number, rate: number): PerformanceLevel => {
-    if (commission > 1000 && rate > 0.1) return "Excellent";
-    if (commission > 500 && rate > 0.05) return "Good";
-    if (commission > 100) return "Fair";
+    if (commission > 50 && rate > 0.1) return "Excellent";
+    if (commission > 30 && rate > 0.05) return "Good";
+    if (commission > 20) return "Fair";
     return "Poor";
   };
 
   const getTierLevel = (commission: number): TierLevel => {
-    if (commission > 1000) return "High";
-    if (commission > 500) return "Medium";
+    if (commission > 50) return "High";
+    if (commission > 20) return "Medium";
     return "Low";
   };
 
@@ -159,18 +169,14 @@ export default function MyCommission(): JSX.Element {
     }).format(amount);
   };
 
-  const formatPercentage = (rate: number): string => {
-    // Assuming commissionRate is already in decimal form (0.1 = 10%)
-    return (rate * 100).toFixed(2);
-  };
 
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+
+const formatDate = (dateString: string): string => {
+
+  return dayjs(dateString).tz("Asia/Dhaka").format("DD MMM, YYYY");
+};
+
+
 
   // Component data
   const performanceLevel: PerformanceLevel = getPerformanceLevel(totalCommission, commissionRate);
@@ -266,7 +272,7 @@ export default function MyCommission(): JSX.Element {
                       </div>
                       <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">Commission Rate</p>
                       <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-purple-700 mb-1">
-                        {formatPercentage(commissionRate)}%
+                        {systemRate}%
                       </p>
                       <p className="text-xs text-gray-500">Current rate</p>
                     </CardContent>

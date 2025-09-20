@@ -2,8 +2,8 @@ import type { ComponentType } from "react";
 
 
 export type ILogin = {
-    email: string,
-    password: string
+  email: string,
+  password: string
 }
 
 
@@ -21,11 +21,11 @@ export interface ISidebarItem {
     url: string;
     component: ComponentType;
     icon?: ComponentType;
-    global?: boolean; 
+    global?: boolean;
   }[];
 }
 
-export type TRole =  "ADMIN" | "AGENT" | "USER" ;
+export type TRole = "ADMIN" | "AGENT" | "USER";
 
 type ZodIssue = {
   code: string;
@@ -85,7 +85,7 @@ export interface Meta {
   page: number;
   limit: number;
   total: number;
-  totalPages:number;
+  totalPages: number;
 }
 
 export interface PaginatedDepositData {
@@ -114,12 +114,12 @@ export interface DepositQueryParams {
 
 
 export interface IData {
-  _id:string
+  _id: string
   from: string;
   to: string;
   amount: number;
   email?: string;
-  type:string;
+  type: string;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -138,30 +138,30 @@ export interface IMeta {
 
 export type Status = "ACTIVE" | "BLOCKED" | "SUSPENDED" | "APPROVED";
 export interface IAuth {
-    provider: "Credential"
-    providerId: string;
+  provider: "Credential"
+  providerId: string;
 }
 
-export interface User{
-    _id: string,
-    name: string,
-    email: string,
-    password?: string,
-    phone?: string 
-    role?: TRole,
-    status: Status,
-    isVerified ? : boolean
-    auth ?: IAuth[]
-    commissionRate?: number;
-    createdAt?: Date;
-    updatedAt?: Date;
+export interface User {
+  _id: string,
+  name: string,
+  email: string,
+  password?: string,
+  phone?: string
+  role?: TRole,
+  status: Status,
+  isVerified?: boolean
+  auth?: IAuth[]
+  commissionRate?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 
 export interface Transaction {
   _id: string;
   amount: number;
-   type: "SEND" | "RECEIVE" | "DEPOSIT" | "WITHDRAW" | "CASH_IN" | "CASH_OUT";
+  type: "SEND" | "RECEIVE" | "DEPOSIT" | "WITHDRAW" | "CASH_IN" | "CASH_OUT";
   status: "PENDING" | "SUCCESS" | "FAILED";
   user: {
     _id: string;
@@ -171,6 +171,24 @@ export interface Transaction {
   createdAt: string;
 }
 
+
+export interface IUserTransactionSummary {
+  _id: string;
+  name: string;
+  email: string;
+  status: "ACTIVE" | "INACTIVE" | "PENDING" | "SUSPENDED";
+  role: "USER" | "ADMIN" | "AGENT";
+  transactionsByType: Record<string, number>;
+  totalTransactions: number;
+  totalVolume: number;
+  lastTransactionType: string;
+  createdAt: Date | string;
+}
+
+export interface TransactionResponse {
+  data: IUserTransactionSummary[];
+  meta: Meta;
+}
 
 export interface Commission {
   _id: string;
@@ -189,7 +207,7 @@ export interface Commission {
 
 
 export interface CommissionFilter extends Record<string, string> {
-  searchTerm: string; 
+  searchTerm: string;
   page: string;
   limit: string;
   type: string;
@@ -205,3 +223,32 @@ export interface CommissionResponse {
 }
 
 
+export interface CashOutTransaction {
+  _id: string;
+  amount: number;
+  status: 'pending' | 'completed' | 'reversed';
+  type: string;
+  from: {
+    email: string
+  };
+  to: {
+    email: string
+  };
+  createdAt: string;
+  updatedAt?: string;
+
+}
+
+export interface CashOutResponse {
+  data: CashOutTransaction[];
+  meta: Meta;
+}
+
+
+export interface TransactionFilter {
+  page: string,
+  limit: string,
+  searchTerm: string
+  type: string,
+  sort: string,
+}

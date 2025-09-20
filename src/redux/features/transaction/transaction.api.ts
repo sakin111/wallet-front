@@ -1,7 +1,7 @@
 
 
 import { baseApi } from "@/redux/baseApi";
-import type { Deposit, IData, PaginatedResponse, RawPaginatedDepositResponse } from "@/Types";
+import type { CashOutTransaction, Deposit, PaginatedResponse, RawPaginatedDepositResponse } from "@/Types";
 
 
 
@@ -69,19 +69,27 @@ export const transactionApi = baseApi.injectEndpoints({
       providesTags: ["TRANSACTION"]
     }),
 
-    agentCashOut: builder.query<
-      {
-        data: IData[];
-        meta: { page: number; limit: number; total: number; totalPages: number };
-      },
-      { page?: number; limit?: number }
-    >({
-      query: ({ page = 1, limit = 5 }) => ({
-        url: `/transaction/cashOutHistory?page=${page}&limit=${limit}`,
+agentCashOut: builder.query<PaginatedResponse<CashOutTransaction>, { page?: number; limit?: number }>({
+  query: ({ page = 1, limit = 5 }) => ({
+    url: `/transaction/cashOutHistory?page=${page}&limit=${limit}`,
+    method: "GET"
+  }),
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transformResponse: (response: any) => response.data, 
+}),
+
+
+
+
+   agentStats: builder.query({
+      query: (userInfo) => ({
+        url: "/transaction/cashOutHistoryCount",
         method: "GET",
+        data: userInfo
+
       }),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      transformResponse: (response: any) => response,
+      providesTags: ["TRANSACTION"]
     }),
 
 
@@ -93,14 +101,14 @@ export const transactionApi = baseApi.injectEndpoints({
       })
     }),
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    allTransactionsFilter: builder.query<any, Record<string, string>>({
+
+    allTransactionFilter: builder.query({
       query: (filters) => ({
-        url: "/admin/allTransactions",
-        method: "GET",
+        url: '/admin/allTransactions',
+        method: 'GET',
         params: filters,
       }),
-      providesTags: ["USER"],
+
     }),
 
   }),
@@ -119,6 +127,7 @@ export const {
   useAgentTransactionQuery,
   useAgentCashOutQuery,
   useAllTransactionQuery,
-  useAllTransactionsFilterQuery
+  useAllTransactionFilterQuery,
+  useAgentStatsQuery
 
 } = transactionApi;

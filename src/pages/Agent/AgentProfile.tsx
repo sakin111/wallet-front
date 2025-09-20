@@ -44,7 +44,7 @@ const profileSchema = z.object({
 });
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
-export const Profile = () => {
+export const AgentProfile = () => {
   const { data: user } = useAgentInfoQuery(undefined);
   const [updateProfile] = useUpdateAgentProfileMutation();
   const [isEditing, setIsEditing] = useState(false);

@@ -1,190 +1,265 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAllUsersQuery } from "@/redux/features/auth/auth.api";
-import { useAllTransactionQuery } from "@/redux/features/transaction/transaction.api";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import {
-  Loader2,
-  Users,
-  BriefcaseBusiness,
-  Repeat2,
-  Banknote,
-} from "lucide-react";
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+} from "@/components/ui/card";
 import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-} from "recharts";
-import { TourWrapper } from "../TourWrapper";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, AlertCircle } from "lucide-react";
+import { Paginate } from "@/utils/Paginate";
 
-interface User {
-  role: string;
-}
+import type { Meta, TransactionFilter } from "@/Types";
+import { Search } from "../Search";
+import { useAllTransactionFilterQuery } from "@/redux/features/transaction/transaction.api";
 
-interface Transaction {
-  amount: number;
-  createdAt: string;
-}
+export default function AllTransaction() {
 
-export default function AdminOverview() {
-  const { data, isLoading, isError } = useAllUsersQuery(undefined);
-  const { data: transactionData } = useAllTransactionQuery(undefined);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
-
-  if (isError || !data) {
-    return (
-      <div className="flex justify-center items-center h-64 text-red-500">
-        Failed to load overview.
-      </div>
-    );
-  }
-
-  const steps = [
-    {
-      target: '[data-tour="analyticsCount"]',
-      content:
-        "This is a user or agent total transaction and total user ",
-    },
-    {
-      target: '[data-tour="analyticsGraph"]',
-      content: "This Graph shows the total Transaction Trends",
-    },
-  ];
-
-  const users: User[] = data?.data || [];
-  const totalUsers = users.length;
-  const totalAgent = users.filter((u) => u.role === "AGENT").length;
-
-  const transactions: Transaction[] = transactionData?.data || [];
-  const transactionCount = transactions.length;
-  const transactionVolume = transactions.reduce(
-    (sum, txn) => sum + txn.amount,
-    0
-  );
-
-  const transactionByDate: Record<string, number> = {};
-  transactions.forEach((txn) => {
-    const date = new Date(txn.createdAt).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-    transactionByDate[date] = (transactionByDate[date] || 0) + txn.amount;
+  const [filters, setFilters] = useState<TransactionFilter>({
+    page: "1",
+    limit: "10",
+    searchTerm: "",
+    type: "",
+    sort: "-createdAt",
   });
 
-  const chartData = Object.entries(transactionByDate).map(([date, value]) => ({
-    date,
-    value,
-  }));
 
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+  } = useAllTransactionFilterQuery(filters);
+
+  console.log(data);
+
+  const users = data?.data || [];
+
+  console.log(users);
+  const meta: Meta = data?.meta;
+
+
+  const handleSearch = (value: string): void => {
+    setFilters((prev) => ({ ...prev, searchTerm: value, page: "1" }));
+  };
+
+  type TransactionType = "ALL" | "CASH_IN" | "CASH_OUT" | "SEND";
+  const handleTypeFilter = (value: TransactionType): void => {
+    setFilters((prev: TransactionFilter) => ({
+      ...prev,
+      type: value === "ALL" ? "" : value,
+      page: "1",
+    }));
+  };
+
+  const handlePageChange = (page: number): void => {
+    setFilters((prev) => ({ ...prev, page: page.toString() }));
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      page: "1",
+      limit: "10",
+      searchTerm: "",
+      type: "",
+      sort: "-createdAt",
+    });
+  };
+
+  // ✅ Loading state
+  if (isLoading) {
+    return (
+      <Card className="mt-6">
+        <CardContent className="flex items-center justify-center py-16">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+          <p>Loading transactions...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // ✅ Error state
+  if (error) {
+    return (
+      <Card className="mt-6">
+        <CardContent className="text-center py-16">
+          <AlertCircle className="w-8 h-8 text-red-600 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-red-600 mb-3">
+            Failed to Load
+          </h3>
+          <Button onClick={() => refetch()}>Try Again</Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // ✅ UI
   return (
-    <TourWrapper
-      tourId="analytics-tour"
-      steps={steps}
-      autoStart={true}
-      delay={500}
-    >
-      <div className="p-4 space-y-6">
-        {/* Stats Cards Section with horizontal scroll on md */}
-        <div
-          className="
-            grid gap-6 sm:grid-cols-2 lg:grid-cols-4
-            md:flex md:space-x-4 md:overflow-x-auto md:whitespace-nowrap
-            [&::-webkit-scrollbar]:h-2
-            [&::-webkit-scrollbar-thumb]:bg-muted-foreground/30
-            [&::-webkit-scrollbar-thumb]:rounded-full
-          "
-          data-tour="analyticsCount"
-        >
-          <Card className="shadow-sm rounded-2xl md:min-w-[250px]">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-base font-medium">
-                Total Users
-              </CardTitle>
-              <Users className="h-5 w-5 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{totalUsers}</p>
-            </CardContent>
-          </Card>
+    <div className="space-y-6 mt-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>All Transactions</CardTitle>
 
-          <Card className="shadow-sm rounded-2xl md:min-w-[250px]">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-base font-medium">
-                Total Agents
-              </CardTitle>
-              <BriefcaseBusiness className="h-5 w-5 text-blue-500" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{totalAgent}</p>
-            </CardContent>
-          </Card>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Search
+              value={filters.searchTerm}
+              onChange={handleSearch}
+              placeholder="Search by name or email..."
+              className="flex-1"
+            />
 
-          <Card className="shadow-sm rounded-2xl md:min-w-[250px]">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-base font-medium">
-                Transactions
-              </CardTitle>
-              <Repeat2 className="h-5 w-5 text-green-500" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{transactionCount}</p>
-            </CardContent>
-          </Card>
+            <Select
+              onValueChange={handleTypeFilter}
+              value={filters.type || "ALL"}
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">All Types</SelectItem>
+                <SelectItem value="CASH_IN">Cash In</SelectItem>
+                <SelectItem value="CASH_OUT">Cash Out</SelectItem>
+                <SelectItem value="SEND">Send</SelectItem>
+              </SelectContent>
+            </Select>
 
-          <Card className="shadow-sm rounded-2xl md:min-w-[250px]">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-base font-medium">Volume</CardTitle>
-              <Banknote className="h-5 w-5 text-emerald-500" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">
-                ${transactionVolume.toLocaleString()}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Transaction Trends Graph */}
-        <Card className="shadow-sm rounded-2xl" data-tour="analyticsGraph">
-          <CardHeader>
-            <CardTitle className="text-base font-medium">
-              Transaction Trends
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {chartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#10B981"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="text-sm text-muted-foreground text-center">
-                No transaction data available
-              </p>
+            {(filters.searchTerm || filters.type) && (
+              <Button onClick={clearFilters} variant="outline">
+                Clear
+              </Button>
             )}
-          </CardContent>
-        </Card>
-      </div>
-    </TourWrapper>
+          </div>
+        </CardHeader>
+
+        <CardContent>
+          {users.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No transactions found</p>
+            </div>
+          ) : (
+            <>
+              {/* Desktop Table */}
+              <div className="hidden md:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Transactions</TableHead>
+                      <TableHead>Total Volume</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Role</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user: any) => (
+                      <TableRow key={user._id}>
+                        <TableCell>
+                          <p className="text-sm text-gray-500">
+                            {user?.from?.email ||
+                              user?.to?.email ||
+                              "No Email"}
+                          </p>
+                        </TableCell>
+                        <TableCell>{user.type}</TableCell>
+                        <TableCell>
+                          ${user.amount?.toLocaleString() || "0"}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              user.status === "ACTIVE"
+                                ? "default"
+                                : "secondary"
+                            }
+                          >
+                            {user.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">
+                            {user?.from?.role ||
+                              user?.to?.role ||
+                              "No Role"}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Mobile Cards */}
+              <div className="block md:hidden space-y-4">
+                {users.map((user: any) => (
+                  <Card key={user._id}>
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <p className="font-medium">{user?.from?.name || user?.to?.name}</p>
+                          <p className="text-sm text-gray-500">
+                            {user?.from?.email || user?.to?.email}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Badge
+                            variant={
+                              user.status === "ACTIVE"
+                                ? "default"
+                                : "secondary"
+                            }
+                          >
+                            {user.status}
+                          </Badge>
+                          <Badge variant="outline">
+                            {user?.from?.role || user?.to?.role}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                          <p className="text-lg font-bold">
+                            {user.type}
+                          </p>
+                          <p className="text-xs text-gray-500">Type</p>
+                        </div>
+                        <div>
+                          <p className="text-lg font-bold">
+                            ${user.amount?.toLocaleString() || "0"}
+                          </p>
+                          <p className="text-xs text-gray-500">Amount</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </>
+          )}
+
+          {meta && users.length > 0 && (
+            <div className="mt-6 flex justify-center">
+              <Paginate meta={meta} onPageChange={handlePageChange} />
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
